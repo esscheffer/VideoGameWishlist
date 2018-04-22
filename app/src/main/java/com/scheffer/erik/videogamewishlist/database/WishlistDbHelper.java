@@ -28,7 +28,7 @@ public class WishlistDbHelper extends SQLiteOpenHelper {
                 GameEntry.TABLE_NAME + "(" +
                 GameEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 GameEntry.COLUMN_EXTERNAL_ID + " INTEGER, " +
-                GameEntry.COLUMN_TITLE + " TEXT, " +
+                GameEntry.COLUMN_NAME + " TEXT, " +
                 GameEntry.COLUMN_SUMMARY + " TEXT, " +
                 GameEntry.COLUMN_RATING + " REAL" +
                 ");";

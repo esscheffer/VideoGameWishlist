@@ -22,7 +22,7 @@ public class WishlistContract {
 
         public static final String TABLE_NAME = "game";
         public static final String COLUMN_EXTERNAL_ID = "externalId";
-        public static final String COLUMN_TITLE = "name";
+        public static final String COLUMN_NAME = "name";
         public static final String COLUMN_SUMMARY = "summary";
         public static final String COLUMN_RATING = "rating";
     }
