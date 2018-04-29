@@ -30,7 +30,13 @@ public class WishlistDbHelper extends SQLiteOpenHelper {
                 GameEntry.COLUMN_EXTERNAL_ID + " INTEGER, " +
                 GameEntry.COLUMN_NAME + " TEXT, " +
                 GameEntry.COLUMN_SUMMARY + " TEXT, " +
-                GameEntry.COLUMN_RATING + " REAL" +
+                GameEntry.COLUMN_RATING + " REAL, " +
+                GameEntry.COLUMN_COVER_URL + " TEXT, " +
+                GameEntry.COLUMN_COVER_CLOUDINARY_ID + " TEXT, " +
+                GameEntry.COLUMN_PLATFORMS + " TEXT, " +
+                GameEntry.COLUMN_GENRES + " TEXT, " +
+                GameEntry.COLUMN_THEMES + " TEXT, " +
+                GameEntry.COLUMN_VIDEOS + " TEXT" +
                 ");";
 
         final String CREATE_PLATFORM_TABLE = "CREATE TABLE " +
@@ -78,8 +84,8 @@ public class WishlistDbHelper extends SQLiteOpenHelper {
         final String CREATE_GAME_GENRE_TABLE = "CREATE TABLE " +
                 GameGenreEntry.TABLE_NAME + "(" +
                 GameGenreEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                GameGenreEntry.COLUMN_GAME_ID + "INTEGER, " +
-                GameGenreEntry.COLUMN_GENRE_EXTERNAL_ID + "INTEGER, " +
+                GameGenreEntry.COLUMN_GAME_ID + " INTEGER, " +
+                GameGenreEntry.COLUMN_GENRE_EXTERNAL_ID + " INTEGER, " +
                 "FOREIGN KEY (" + GameGenreEntry.COLUMN_GAME_ID + ") " +
                 "REFERENCES " + GameEntry.TABLE_NAME + "(" + GameEntry._ID + ") ON DELETE CASCADE," +
                 "FOREIGN KEY (" + GameGenreEntry.COLUMN_GENRE_EXTERNAL_ID + ") " +
@@ -89,8 +95,8 @@ public class WishlistDbHelper extends SQLiteOpenHelper {
         final String CREATE_GAME_THEME_TABLE = "CREATE TABLE " +
                 GameThemeEntry.TABLE_NAME + "(" +
                 GameThemeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                GameThemeEntry.COLUMN_GAME_ID + "INTEGER, " +
-                GameThemeEntry.COLUMN_THEME_EXTERNAL_ID + "INTEGER, " +
+                GameThemeEntry.COLUMN_GAME_ID + " INTEGER, " +
+                GameThemeEntry.COLUMN_THEME_EXTERNAL_ID + " INTEGER, " +
                 "FOREIGN KEY (" + GameThemeEntry.COLUMN_GAME_ID + ") " +
                 "REFERENCES " + GameEntry.TABLE_NAME + "(" + GameEntry._ID + ") ON DELETE CASCADE," +
                 "FOREIGN KEY (" + GameThemeEntry.COLUMN_THEME_EXTERNAL_ID + ") " +

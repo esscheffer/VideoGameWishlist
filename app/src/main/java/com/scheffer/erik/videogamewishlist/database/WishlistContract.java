@@ -25,6 +25,20 @@ public class WishlistContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_SUMMARY = "summary";
         public static final String COLUMN_RATING = "rating";
+
+        /*
+         following columns are used to save a list of this entities as string to avoid
+         the need to make a JOIN and will be changed after project deliver when the
+         content provider will be replaced by a better DB library
+        */
+
+        public static final String COLUMN_COVER_URL = "coverUrl";
+        public static final String COLUMN_COVER_CLOUDINARY_ID = "cloudinaryId";
+
+        public static final String COLUMN_PLATFORMS = "platforms";
+        public static final String COLUMN_GENRES = "genres";
+        public static final String COLUMN_THEMES = "themes";
+        public static final String COLUMN_VIDEOS = "videos";
     }
 
     public static final class PlatformEntry implements BaseColumns {
