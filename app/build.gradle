@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Add the IGBB api key to the gradle.properties file like
+        // API_KEY="<your key>"
+        buildConfigField("String", "API_KEY", API_KEY)
     }
     buildTypes {
         release {
@@ -26,6 +30,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.3.0'
+    implementation 'com.github.igdb:api-java:2.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 

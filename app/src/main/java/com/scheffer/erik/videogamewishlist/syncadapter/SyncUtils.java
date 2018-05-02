@@ -13,7 +13,7 @@ import com.scheffer.erik.videogamewishlist.database.WishlistContract;
  * Static helper methods for working with the sync framework.
  */
 public class SyncUtils {
-    private static final long SYNC_FREQUENCY = 60 * 60 * 24;  // 24 hour (in seconds)
+    private static final long SYNC_FREQUENCY = 60 * 60 * 24 * 30;  // 30 days (in seconds)
     private static final String CONTENT_AUTHORITY = WishlistContract.AUTHORITY;
     private static final String PREF_SETUP_COMPLETE = "setup_complete";
     public static final String ACCOUNT_TYPE = "com.scheffer.erik.videogamewishlist.account";

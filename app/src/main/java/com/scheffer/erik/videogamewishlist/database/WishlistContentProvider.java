@@ -48,10 +48,10 @@ public class WishlistContentProvider extends ContentProvider {
                           PLATFORMS_WITH_ID);
 
         uriMatcher.addURI(WishlistContract.AUTHORITY,
-                          WishlistContract.PATH_GAMES_GENRES,
+                          WishlistContract.PATH_GENRES,
                           GENRES);
         uriMatcher.addURI(WishlistContract.AUTHORITY,
-                          WishlistContract.PATH_GAMES_GENRES + "/#",
+                          WishlistContract.PATH_GENRES + "/#",
                           GENRES_WITH_ID);
 
         uriMatcher.addURI(WishlistContract.AUTHORITY,
@@ -111,19 +111,19 @@ public class WishlistContentProvider extends ContentProvider {
             case PLATFORMS:
                 id = database.insert(PlatformEntry.TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(GameEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(PlatformEntry.CONTENT_URI, id);
                 }
                 break;
             case THEMES:
                 id = database.insert(ThemeEntry.TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(GameEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(ThemeEntry.CONTENT_URI, id);
                 }
                 break;
             case GENRES:
                 id = database.insert(GenreEntry.TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(GameEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(GenreEntry.CONTENT_URI, id);
                 }
                 break;
             default:
@@ -246,19 +246,19 @@ public class WishlistContentProvider extends ContentProvider {
             case PLATFORMS_WITH_ID:
                 updateId = database.update(PlatformEntry.TABLE_NAME,
                                            values,
-                                           GameEntry._ID + "=?",
+                                           PlatformEntry._ID + "=?",
                                            new String[]{String.valueOf(id)});
                 break;
             case GENRES_WITH_ID:
                 updateId = database.update(GenreEntry.TABLE_NAME,
                                            values,
-                                           GameEntry._ID + "=?",
+                                           GenreEntry._ID + "=?",
                                            new String[]{String.valueOf(id)});
                 break;
             case THEMES_WITH_ID:
                 updateId = database.update(ThemeEntry.TABLE_NAME,
                                            values,
-                                           GameEntry._ID + "=?",
+                                           ThemeEntry._ID + "=?",
                                            new String[]{String.valueOf(id)});
                 break;
             default:

@@ -42,21 +42,21 @@ public class WishlistDbHelper extends SQLiteOpenHelper {
         final String CREATE_PLATFORM_TABLE = "CREATE TABLE " +
                 PlatformEntry.TABLE_NAME + "(" +
                 PlatformEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PlatformEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE, " +
+                PlatformEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE ON CONFLICT REPLACE, " +
                 PlatformEntry.COLUMN_NAME + " TEXT" +
                 ");";
 
         final String CREATE_GENRE_TABLE = "CREATE TABLE " +
                 GenreEntry.TABLE_NAME + "(" +
                 GenreEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                GenreEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE, " +
+                GenreEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE ON CONFLICT REPLACE, " +
                 GenreEntry.COLUMN_NAME + " TEXT" +
                 ");";
 
         final String CREATE_THEME_TABLE = "CREATE TABLE " +
                 ThemeEntry.TABLE_NAME + "(" +
                 ThemeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ThemeEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE, " +
+                ThemeEntry.COLUMN_EXTERNAL_ID + " INTEGER UNIQUE ON CONFLICT REPLACE, " +
                 ThemeEntry.COLUMN_NAME + " TEXT" +
                 ");";
 

@@ -1,18 +1,22 @@
 package com.scheffer.erik.videogamewishlist.activities;
 
-import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.scheffer.erik.videogamewishlist.R;
-import com.scheffer.erik.videogamewishlist.database.WishlistContract;
-import com.scheffer.erik.videogamewishlist.syncadapter.GenericAccountService;
+import com.scheffer.erik.videogamewishlist.WishlistActivity;
 import com.scheffer.erik.videogamewishlist.syncadapter.SyncUtils;
 
-import static com.scheffer.erik.videogamewishlist.syncadapter.SyncUtils.ACCOUNT_TYPE;
+import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_GENRES_SYNC;
+import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_PLATFORMS_SYNC;
+import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_THEMES_SYNC;
 
 public class WelcomeActivity extends AppCompatActivity {
+    SharedPreferences.OnSharedPreferenceChangeListener spChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +31,33 @@ public class WelcomeActivity extends AppCompatActivity {
                                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         SyncUtils.CreateSyncAccount(this);
 
-        findViewById(R.id.fullscreen_content).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle b = new Bundle();
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                ContentResolver.requestSync(
-                        GenericAccountService.GetAccount(ACCOUNT_TYPE),
-                        WishlistContract.AUTHORITY,
-                        b);
-            }
-        });
+        if (isCacheFullySynced()) {
+            startActivity(new Intent(WelcomeActivity.this, WishlistActivity.class));
+        } else {
+
+            spChanged = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                @Override
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                                      String key) {
+                    if (isCacheFullySynced()) {
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                                         .unregisterOnSharedPreferenceChangeListener(spChanged);
+                        WelcomeActivity.this
+                                .startActivity(new Intent(WelcomeActivity.this,
+                                                          WishlistActivity.class));
+                    }
+                }
+            };
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+                             .registerOnSharedPreferenceChangeListener(spChanged);
+        }
+    }
+
+    private boolean isCacheFullySynced() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext());
+        return sharedPreferences.getBoolean(PREF_GENRES_SYNC, false) &&
+                sharedPreferences.getBoolean(PREF_THEMES_SYNC, false) &&
+                sharedPreferences.getBoolean(PREF_PLATFORMS_SYNC, false);
     }
 }
