@@ -1,0 +1,34 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/cover_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:contentDescription="@string/game_cover"
+        android:src="@drawable/ic_image_off_black_24dp" />
+
+    <TextView
+        android:id="@+id/game_title"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/simple_margin"
+        android:textColor="#000"
+        app:layout_constraintStart_toEndOf="@+id/cover_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Game title comes here" />
+
+    <TextView
+        android:id="@+id/game_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/simple_margin"
+        app:layout_constraintStart_toEndOf="@+id/cover_image"
+        app:layout_constraintTop_toBottomOf="@+id/game_title"
+        tools:text="0.0" />
+</android.support.constraint.ConstraintLayout>

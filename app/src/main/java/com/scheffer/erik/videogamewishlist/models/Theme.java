@@ -1,6 +1,9 @@
 package com.scheffer.erik.videogamewishlist.models;
 
-public class Theme {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Theme implements Parcelable {
     private long id;
     private String name;
 
@@ -19,4 +22,28 @@ public class Theme {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+    }
+
+    public Theme() {}
+
+    protected Theme(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+    }
+
+    public static final Parcelable.Creator<Theme> CREATOR = new Parcelable.Creator<Theme>() {
+        @Override
+        public Theme createFromParcel(Parcel source) {return new Theme(source);}
+
+        @Override
+        public Theme[] newArray(int size) {return new Theme[size];}
+    };
 }

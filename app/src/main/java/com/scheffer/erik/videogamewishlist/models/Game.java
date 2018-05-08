@@ -1,8 +1,11 @@
 package com.scheffer.erik.videogamewishlist.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class Game {
+public class Game implements Parcelable {
     private long _id; // internal DB ID
     private long id; // external API id
     private String name;
@@ -93,4 +96,44 @@ public class Game {
     public void setVideos(List<Video> videos) {
         this.videos = videos;
     }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this._id);
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.summary);
+        dest.writeDouble(this.rating);
+        dest.writeParcelable(this.cover, flags);
+        dest.writeTypedList(this.platforms);
+        dest.writeTypedList(this.genres);
+        dest.writeTypedList(this.themes);
+        dest.writeTypedList(this.videos);
+    }
+
+    public Game() {}
+
+    protected Game(Parcel in) {
+        this._id = in.readLong();
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.summary = in.readString();
+        this.rating = in.readDouble();
+        this.cover = in.readParcelable(Image.class.getClassLoader());
+        this.platforms = in.createTypedArrayList(Platform.CREATOR);
+        this.genres = in.createTypedArrayList(Genre.CREATOR);
+        this.themes = in.createTypedArrayList(Theme.CREATOR);
+        this.videos = in.createTypedArrayList(Video.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Game> CREATOR = new Parcelable.Creator<Game>() {
+        @Override
+        public Game createFromParcel(Parcel source) {return new Game(source);}
+
+        @Override
+        public Game[] newArray(int size) {return new Game[size];}
+    };
 }

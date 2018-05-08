@@ -1,0 +1,133 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.GameDetailActivity"
+    tools:showIn="@layout/activity_game_detail">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/summary_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/simple_margin"
+            android:text="@string/summary_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large_margin"
+            android:layout_marginTop="@dimen/simple_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/summary_lable"
+            tools:text="Here comes a long sumary" />
+
+        <TextView
+            android:id="@+id/rating_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="@string/rating_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/summary" />
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rating_lable"
+            app:layout_constraintStart_toEndOf="@+id/rating_lable"
+            app:layout_constraintTop_toTopOf="@+id/rating_lable"
+            tools:text="5.0" />
+
+        <TextView
+            android:id="@+id/platforms_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="@string/platforms_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating_lable" />
+
+        <TextView
+            android:id="@+id/platforms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/platforms_lable"
+            app:layout_constraintStart_toEndOf="@+id/platforms_lable"
+            app:layout_constraintTop_toTopOf="@+id/platforms_lable"
+            tools:text="Platform 1, Platform 2, Platform 3" />
+
+        <TextView
+            android:id="@+id/genres_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="@string/genres_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/platforms_lable" />
+
+        <TextView
+            android:id="@+id/genres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/genres_lable"
+            app:layout_constraintStart_toEndOf="@+id/genres_lable"
+            app:layout_constraintTop_toTopOf="@+id/genres_lable"
+            tools:text="Genre 1, Genre 2, Genre 3" />
+
+        <TextView
+            android:id="@+id/themes_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="@string/themes_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/genres_lable" />
+
+        <TextView
+            android:id="@+id/themes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/themes_lable"
+            app:layout_constraintStart_toEndOf="@+id/themes_lable"
+            app:layout_constraintTop_toTopOf="@+id/themes_lable"
+            tools:text="Theme 1, Theme 2, Theme 3" />
+
+        <TextView
+            android:id="@+id/videos_lable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/simple_margin"
+            android:layout_marginTop="@dimen/large_margin"
+            android:text="@string/videos_lable"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/themes_lable" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/videos_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/simple_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/videos_lable" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>
