@@ -1,6 +1,7 @@
 package com.scheffer.erik.videogamewishlist.converters;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.scheffer.erik.videogamewishlist.database.WishlistContract;
 import com.scheffer.erik.videogamewishlist.models.Theme;
@@ -11,5 +12,10 @@ public class ThemeConverter {
         contentValues.put(WishlistContract.ThemeEntry.COLUMN_EXTERNAL_ID, theme.getId());
         contentValues.put(WishlistContract.ThemeEntry.COLUMN_NAME, theme.getName());
         return contentValues;
+    }
+
+    public static Theme fromCursor(Cursor cursor) {
+        return new Theme(cursor.getLong(cursor.getColumnIndex(WishlistContract.ThemeEntry.COLUMN_EXTERNAL_ID)),
+                         cursor.getString(cursor.getColumnIndex(WishlistContract.ThemeEntry.COLUMN_NAME)));
     }
 }

@@ -102,4 +102,6 @@
     <string name="themes_lable">Themes:</string>
     <string name="videos_lable">Videos:</string>
     <string name="nothing_to_show_video">No app was found to show the trailer</string>
+    <string name="game_title">Game title</string>
+    <string name="search">Search</string>
 </resources>

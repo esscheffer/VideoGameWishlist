@@ -34,6 +34,11 @@ public class Theme implements Parcelable {
 
     public Theme() {}
 
+    public Theme(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     protected Theme(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();

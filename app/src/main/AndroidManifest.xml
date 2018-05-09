@@ -58,7 +58,7 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-
+        <activity android:name=".activities.SearchFormActivity" />
     </application>
 
 </manifest>

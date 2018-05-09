@@ -2,11 +2,11 @@ package com.scheffer.erik.videogamewishlist;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.scheffer.erik.videogamewishlist.activities.SearchFormActivity;
 import com.scheffer.erik.videogamewishlist.converters.GameConverter;
 import com.scheffer.erik.videogamewishlist.converters.PlatformConverter;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract.GameEntry;
@@ -47,12 +48,13 @@ public class WishlistActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.search_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(WishlistActivity.this, SearchFormActivity.class));
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
 
@@ -71,8 +73,8 @@ public class WishlistActivity extends AppCompatActivity {
                 final SQLiteDatabase database = dbHelper.getWritableDatabase();
 
                 int deleted = database.delete(GameEntry.TABLE_NAME,
-                                GameEntry.COLUMN_EXTERNAL_ID + "=?",
-                                new String[]{String.valueOf(0)});
+                                              GameEntry.COLUMN_EXTERNAL_ID + "=?",
+                                              new String[]{String.valueOf(0)});
                 System.out.println(deleted);
             }
         });
@@ -100,7 +102,9 @@ public class WishlistActivity extends AppCompatActivity {
         gamePlatformValues.put(GamePlatformEntry.COLUMN_GAME_ID, newGameId);
         gamePlatformValues.put(GamePlatformEntry.COLUMN_PLATFORM_EXTERNAL_ID,
                                platformExternalId);
-        long newGamePlatformId = database.insert(GamePlatformEntry.TABLE_NAME, null, gamePlatformValues);
+        long newGamePlatformId = database.insert(GamePlatformEntry.TABLE_NAME,
+                                                 null,
+                                                 gamePlatformValues);
     }
 
     private void contentProviderInsert() {
@@ -126,7 +130,7 @@ public class WishlistActivity extends AppCompatActivity {
         game.setPlatforms(platforms);
 
         Uri platformUri = getContentResolver().insert(PlatformEntry.CONTENT_URI,
-                                              PlatformConverter.toContentValues(p1));
+                                                      PlatformConverter.toContentValues(p1));
         long platformId = ContentUris.parseId(platformUri);
 
         Genre g1 = new Genre();

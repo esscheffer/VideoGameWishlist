@@ -34,6 +34,11 @@ public class Platform implements Parcelable {
 
     public Platform() {}
 
+    public Platform(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     protected Platform(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();

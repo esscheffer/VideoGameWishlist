@@ -161,7 +161,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               null,
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
             case GAMES_WITH_ID:
                 returnCursor = database.query(GameEntry.TABLE_NAME,
@@ -170,7 +170,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               new String[]{uri.getPathSegments().get(1)},
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
 
             case PLATFORMS:
@@ -180,7 +180,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               null,
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
             case PLATFORMS_WITH_ID:
                 returnCursor = database.query(PlatformEntry.TABLE_NAME,
@@ -189,7 +189,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               new String[]{uri.getPathSegments().get(1)},
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
 
             case GENRES:
@@ -199,7 +199,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               null,
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
             case GENRES_WITH_ID:
                 returnCursor = database.query(GenreEntry.TABLE_NAME,
@@ -208,7 +208,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               new String[]{uri.getPathSegments().get(1)},
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
 
             case THEMES:
@@ -218,7 +218,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               null,
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
             case THEMES_WITH_ID:
                 returnCursor = database.query(ThemeEntry.TABLE_NAME,
@@ -227,7 +227,7 @@ public class WishlistContentProvider extends ContentProvider {
                                               new String[]{uri.getPathSegments().get(1)},
                                               null,
                                               null,
-                                              null);
+                                              sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

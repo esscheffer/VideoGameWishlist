@@ -34,6 +34,11 @@ public class Genre implements Parcelable {
 
     public Genre() {}
 
+    public Genre(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     protected Genre(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
