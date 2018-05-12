@@ -104,8 +104,15 @@
     <string name="nothing_to_show_video">No app was found to show the trailer</string>
     <string name="game_title">Game title</string>
     <string name="search">Search</string>
-    <string name="title_activity_game_search_list">GameSearchListActivity</string>
+    <string name="title_activity_game_search_list">Games</string>
     <string name="loading_game_list">Loading game list…</string>
     <string name="no_games_found">No games found.</string>
     <string name="error_games_from_server">Error retrieving games from server.</string>
+    <string name="select_platform">Select platform</string>
+    <string name="select_genre">Select genre</string>
+    <string name="select_theme">Select theme</string>
+    <string name="any_platform">Any platform</string>
+    <string name="any_genre">Any genre</string>
+    <string name="any_theme">Any theme</string>
+    <string name="title_activity_search">Search game</string>
 </resources>

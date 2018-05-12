@@ -48,6 +48,8 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
                    .load(IGDBImageUtils.getImageUrl(holder.game.getCover(), IGDBImageUtils.THUMB))
                    .placeholder(R.drawable.ic_image_off_black_24dp)
                    .into(holder.coverImage);
+        } else {
+            holder.coverImage.setImageResource(R.drawable.ic_image_off_black_24dp);
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {

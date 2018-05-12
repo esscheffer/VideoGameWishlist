@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,7 +62,9 @@ public class SearchFormActivity extends AppCompatActivity
         setContentView(R.layout.activity_search_form);
         ButterKnife.bind(this);
 
-        platformsSpinner.setTitle("Select platform");
+        platformsSpinner.setTitle(getResources().getString(R.string.select_platform));
+        genresSpinner.setTitle(getResources().getString(R.string.select_genre));
+        themesSpinner.setTitle(getResources().getString(R.string.select_theme));
 
         getLoaderManager().initLoader(PLATFORMS_LOADER, null, this);
         getLoaderManager().initLoader(GENRES_LOADER, null, this);
@@ -87,10 +90,21 @@ public class SearchFormActivity extends AppCompatActivity
                     selectedTheme = themes.get(themesSpinner.getSelectedItemPosition() - 1);
                 }
 
-                int minimumRating = ratingRangeBar.getLeft();
-                int maximumRating = ratingRangeBar.getRight();
+                int minimumRating = ratingRangeBar.getLeftIndex();
+                int maximumRating = ratingRangeBar.getRightIndex();
 
-                startActivity(new Intent(SearchFormActivity.this, GameSearchListActivity.class));
+                Intent searchListIntent = new Intent(SearchFormActivity.this,
+                                                     GameSearchListActivity.class);
+                searchListIntent.putExtra(GameSearchListActivity.GAME_TITLE_EXTRA, gameTitle);
+                searchListIntent.putExtra(GameSearchListActivity.PLATFORM_EXTRA, selectedPlatform);
+                searchListIntent.putExtra(GameSearchListActivity.GENRE_EXTRA, selectedGenre);
+                searchListIntent.putExtra(GameSearchListActivity.THEME_EXTRA, selectedTheme);
+                searchListIntent.putExtra(GameSearchListActivity.MINIMUM_RATING_EXTRA,
+                                          minimumRating);
+                searchListIntent.putExtra(GameSearchListActivity.MAXIMUM_RATING_EXTRA,
+                                          maximumRating);
+
+                startActivity(searchListIntent);
             }
         });
     }
@@ -130,7 +144,7 @@ public class SearchFormActivity extends AppCompatActivity
                     platforms.add(PlatformConverter.fromCursor(cursor));
                 }
                 List<String> platformsNames = new ArrayList<>();
-                platformsNames.add("Any platform");
+                platformsNames.add(getResources().getString(R.string.any_platform));
                 for (Platform platform : platforms) {
                     platformsNames.add(platform.getName());
                 }
@@ -147,7 +161,7 @@ public class SearchFormActivity extends AppCompatActivity
                     genres.add(GenreConverter.fromCursor(cursor));
                 }
                 List<String> genresNames = new ArrayList<>();
-                genresNames.add("Any genre");
+                genresNames.add(getResources().getString(R.string.any_genre));
                 for (Genre genre : genres) {
                     genresNames.add(genre.getName());
                 }
@@ -164,7 +178,7 @@ public class SearchFormActivity extends AppCompatActivity
                     themes.add(ThemeConverter.fromCursor(cursor));
                 }
                 List<String> themesNames = new ArrayList<>();
-                themesNames.add("Any genre");
+                themesNames.add(getResources().getString(R.string.any_theme));
                 for (Theme theme : themes) {
                     themesNames.add(theme.getName());
                 }
@@ -180,5 +194,16 @@ public class SearchFormActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

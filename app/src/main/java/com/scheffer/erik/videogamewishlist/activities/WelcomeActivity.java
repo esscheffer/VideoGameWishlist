@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.scheffer.erik.videogamewishlist.R;
-import com.scheffer.erik.videogamewishlist.WishlistActivity;
 import com.scheffer.erik.videogamewishlist.syncadapter.SyncUtils;
 
 import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_GENRES_SYNC;

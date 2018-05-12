@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WishlistActivity"
+            android:name=".activities.WishlistActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -58,7 +58,14 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <activity android:name=".activities.SearchFormActivity" />
+        <activity
+            android:name=".activities.SearchFormActivity"
+            android:label="@string/title_activity_search">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.scheffer.erik.videogamewishlist.activities.WishlistActivity" />
+        </activity>
+
         <activity
             android:name=".activities.GameSearchListActivity"
             android:label="@string/title_activity_game_search_list"

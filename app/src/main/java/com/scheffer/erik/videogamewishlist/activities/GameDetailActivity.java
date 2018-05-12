@@ -9,6 +9,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,6 +69,10 @@ public class GameDetailActivity extends AppCompatActivity {
         if (game != null) {
             toolbar.setTitle(game.getName());
             setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
             Picasso.get()
                    .load(IGDBImageUtils.getImageUrl(game.getCover(), IGDBImageUtils.SIZE_720P))
                    .placeholder(R.drawable.ic_image_off_black_24dp)
@@ -110,5 +115,16 @@ public class GameDetailActivity extends AppCompatActivity {
                                               linearLayoutManager.getOrientation()));
             videosReciclerView.setAdapter(new VideoAdapter(game.getVideos()));
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,4 +1,4 @@
-package com.scheffer.erik.videogamewishlist;
+package com.scheffer.erik.videogamewishlist.activities;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.scheffer.erik.videogamewishlist.activities.SearchFormActivity;
+import com.scheffer.erik.videogamewishlist.R;
 import com.scheffer.erik.videogamewishlist.converters.GameConverter;
 import com.scheffer.erik.videogamewishlist.converters.PlatformConverter;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract.GameEntry;
