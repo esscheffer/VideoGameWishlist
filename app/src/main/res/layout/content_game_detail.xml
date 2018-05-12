@@ -23,10 +23,9 @@
 
         <TextView
             android:id="@+id/summary"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/large_margin"
-            android:layout_marginTop="@dimen/simple_margin"
+            android:layout_margin="@dimen/large_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/summary_lable"
             tools:text="Here comes a long sumary" />

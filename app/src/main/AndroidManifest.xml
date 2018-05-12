@@ -59,6 +59,15 @@
         </service>
 
         <activity android:name=".activities.SearchFormActivity" />
+        <activity
+            android:name=".activities.GameSearchListActivity"
+            android:label="@string/title_activity_game_search_list"
+            android:parentActivityName=".activities.SearchFormActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.scheffer.erik.videogamewishlist.activities.SearchFormActivity" />
+        </activity>
     </application>
 
 </manifest>

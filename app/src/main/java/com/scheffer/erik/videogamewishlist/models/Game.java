@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class Game implements Parcelable {
-    private long _id; // internal DB ID
     private long id; // external API id
     private String name;
     private String summary;
@@ -16,14 +15,6 @@ public class Game implements Parcelable {
     private List<Genre> genres;
     private List<Theme> themes;
     private List<Video> videos;
-
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
-    }
 
     public long getId() {
         return id;
@@ -102,7 +93,6 @@ public class Game implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(this._id);
         dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeString(this.summary);
@@ -117,7 +107,6 @@ public class Game implements Parcelable {
     public Game() {}
 
     protected Game(Parcel in) {
-        this._id = in.readLong();
         this.id = in.readLong();
         this.name = in.readString();
         this.summary = in.readString();

@@ -55,8 +55,6 @@ public class GameDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_detail);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +66,8 @@ public class GameDetailActivity extends AppCompatActivity {
         Game game = getIntent().getParcelableExtra(GAME_EXTRA);
 
         if (game != null) {
+            toolbar.setTitle(game.getName());
+            setSupportActionBar(toolbar);
             Picasso.get()
                    .load(IGDBImageUtils.getImageUrl(game.getCover(), IGDBImageUtils.SIZE_720P))
                    .placeholder(R.drawable.ic_image_off_black_24dp)

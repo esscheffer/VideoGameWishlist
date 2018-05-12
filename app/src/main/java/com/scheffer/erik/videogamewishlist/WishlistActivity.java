@@ -21,18 +21,22 @@ import com.scheffer.erik.videogamewishlist.database.WishlistContract.GameEntry;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract.GamePlatformEntry;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract.PlatformEntry;
 import com.scheffer.erik.videogamewishlist.database.WishlistDbHelper;
+import com.scheffer.erik.videogamewishlist.fragments.GameListFragment;
 import com.scheffer.erik.videogamewishlist.models.Game;
 import com.scheffer.erik.videogamewishlist.models.Genre;
 import com.scheffer.erik.videogamewishlist.models.Image;
 import com.scheffer.erik.videogamewishlist.models.Platform;
 import com.scheffer.erik.videogamewishlist.models.Theme;
 import com.scheffer.erik.videogamewishlist.models.Video;
+import com.scheffer.erik.videogamewishlist.utils.TestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.scheffer.erik.videogamewishlist.fragments.GameListFragment.GAMES_LIST_KEY;
 
 public class WishlistActivity extends AppCompatActivity {
     @BindView(R.id.create_button)
@@ -57,6 +61,21 @@ public class WishlistActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
             }
         });
+
+        GameListFragment gameListFragment = new GameListFragment();
+
+        // In case this activity was started with special instructions from an
+        // Intent, pass the Intent's extras to the fragment as arguments
+
+        ArrayList<Game> games = new ArrayList<>();
+        games.add(TestUtils.getMockGame());
+        Bundle fragmentArgs = new Bundle();
+        fragmentArgs.putParcelableArrayList(GAMES_LIST_KEY, games);
+        gameListFragment.setArguments(fragmentArgs);
+
+        // Add the fragment to the 'fragment_container' FrameLayout
+        getSupportFragmentManager().beginTransaction()
+                                   .add(R.id.fragment_container, gameListFragment).commit();
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

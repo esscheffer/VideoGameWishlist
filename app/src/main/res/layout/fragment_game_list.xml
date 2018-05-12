@@ -5,8 +5,6 @@
     android:name="com.scheffer.erik.videogamewishlist.fragments.WishlistFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".fragments.WishlistFragment"
+    tools:context=".fragments.GameListFragment"
     tools:listitem="@layout/game_list_item" />

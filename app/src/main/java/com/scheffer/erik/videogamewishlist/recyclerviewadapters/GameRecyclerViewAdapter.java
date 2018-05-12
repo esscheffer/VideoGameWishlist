@@ -43,10 +43,12 @@ public class GameRecyclerViewAdapter extends RecyclerView.Adapter<GameRecyclerVi
         holder.game = games.get(position);
         holder.titleTextView.setText(games.get(position).getName());
         holder.ratingTextView.setText(String.format("%.2f", games.get(position).getRating()));
-        Picasso.get()
-               .load(IGDBImageUtils.getImageUrl(holder.game.getCover(), IGDBImageUtils.THUMB))
-               .placeholder(R.drawable.ic_image_off_black_24dp)
-               .into(holder.coverImage);
+        if (holder.game.getCover() != null) {
+            Picasso.get()
+                   .load(IGDBImageUtils.getImageUrl(holder.game.getCover(), IGDBImageUtils.THUMB))
+                   .placeholder(R.drawable.ic_image_off_black_24dp)
+                   .into(holder.coverImage);
+        }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

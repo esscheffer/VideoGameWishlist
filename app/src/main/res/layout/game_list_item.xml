@@ -10,18 +10,24 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:contentDescription="@string/game_cover"
-        android:src="@drawable/ic_image_off_black_24dp" />
+        app:layout_constraintEnd_toStartOf="@+id/game_title"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_image_off_black_24dp" />
 
     <TextView
         android:id="@+id/game_title"
         style="?android:attr/textAppearanceMedium"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/simple_margin"
+        android:scrollHorizontally="false"
         android:textColor="#000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/cover_image"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Game title comes here" />
+        tools:text="Game title comes here, but what happens if it is too long" />
 
     <TextView
         android:id="@+id/game_rating"

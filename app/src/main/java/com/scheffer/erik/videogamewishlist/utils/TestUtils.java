@@ -13,7 +13,7 @@ import java.util.List;
 public class TestUtils {
     public static Game getMockGame() {
         Game game = new Game();
-        game.setName("name");
+        game.setName("very long game title to see if the text get wrapped to a new line");
         game.setSummary("summary");
         game.setRating(5.5);
 

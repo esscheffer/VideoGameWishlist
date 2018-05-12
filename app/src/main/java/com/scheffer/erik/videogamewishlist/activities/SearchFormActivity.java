@@ -2,6 +2,7 @@ package com.scheffer.erik.videogamewishlist.activities;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -88,6 +89,8 @@ public class SearchFormActivity extends AppCompatActivity
 
                 int minimumRating = ratingRangeBar.getLeft();
                 int maximumRating = ratingRangeBar.getRight();
+
+                startActivity(new Intent(SearchFormActivity.this, GameSearchListActivity.class));
             }
         });
     }
