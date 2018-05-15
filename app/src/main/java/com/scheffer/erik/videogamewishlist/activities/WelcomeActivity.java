@@ -7,8 +7,11 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.scheffer.erik.videogamewishlist.R;
 import com.scheffer.erik.videogamewishlist.syncadapter.SyncUtils;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_GENRES_SYNC;
 import static com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.PREF_PLATFORMS_SYNC;
@@ -20,6 +23,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_welcome);
         findViewById(R.id.fullscreen_content)
                 .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
