@@ -15,6 +15,7 @@ public class WishlistContract {
     public static final String PATH_GAMES_PLATFORMS = "games-platforms";
     public static final String PATH_GAMES_GENRES = "games-genres";
     public static final String PATH_GAMES_THEMES = "games-themes";
+    public static final String PATH_RANDOM = "random";
 
     public static final class GameEntry implements BaseColumns {
 

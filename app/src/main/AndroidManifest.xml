@@ -65,7 +65,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.scheffer.erik.videogamewishlist.activities.WishlistActivity" />
         </activity>
-
         <activity
             android:name=".activities.GameSearchListActivity"
             android:label="@string/title_activity_game_search_list"
@@ -75,6 +74,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.scheffer.erik.videogamewishlist.activities.SearchFormActivity" />
         </activity>
+
+        <receiver android:name=".widget.GameWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/game_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

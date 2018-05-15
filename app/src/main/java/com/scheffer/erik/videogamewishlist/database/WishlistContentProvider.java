@@ -28,6 +28,7 @@ public class WishlistContentProvider extends ContentProvider {
     public static final int GENRES_WITH_ID = 105;
     public static final int THEMES = 106;
     public static final int THEMES_WITH_ID = 107;
+    public static final int RANDOM_GAME = 108;
     public static final UriMatcher uriMatcher = buildUriMatcher();
 
     public static UriMatcher buildUriMatcher() {
@@ -60,6 +61,10 @@ public class WishlistContentProvider extends ContentProvider {
         uriMatcher.addURI(WishlistContract.AUTHORITY,
                           WishlistContract.PATH_THEMES + "/#",
                           THEMES_WITH_ID);
+
+        uriMatcher.addURI(WishlistContract.AUTHORITY,
+                          WishlistContract.PATH_GAMES + "/" + WishlistContract.PATH_RANDOM,
+                          RANDOM_GAME);
 
         return uriMatcher;
     }
@@ -228,6 +233,10 @@ public class WishlistContentProvider extends ContentProvider {
                                               null,
                                               null,
                                               sortOrder);
+                break;
+            case RANDOM_GAME:
+                returnCursor = database.rawQuery("SELECT * FROM " + GameEntry.TABLE_NAME + " ORDER BY RANDOM() LIMIT 1",
+                                                 null);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
