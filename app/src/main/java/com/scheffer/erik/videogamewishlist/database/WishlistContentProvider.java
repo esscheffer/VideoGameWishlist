@@ -108,25 +108,37 @@ public class WishlistContentProvider extends ContentProvider {
         long id;
         switch (uriMatcher.match(uri)) {
             case GAMES:
-                id = database.insert(GameEntry.TABLE_NAME, null, values);
+                id = database.insertWithOnConflict(GameEntry.TABLE_NAME,
+                                                   null,
+                                                   values,
+                                                   SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(GameEntry.CONTENT_URI, id);
                 }
                 break;
             case PLATFORMS:
-                id = database.insert(PlatformEntry.TABLE_NAME, null, values);
+                id = database.insertWithOnConflict(PlatformEntry.TABLE_NAME,
+                                                   null,
+                                                   values,
+                                                   SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(PlatformEntry.CONTENT_URI, id);
                 }
                 break;
             case THEMES:
-                id = database.insert(ThemeEntry.TABLE_NAME, null, values);
+                id = database.insertWithOnConflict(ThemeEntry.TABLE_NAME,
+                                                   null,
+                                                   values,
+                                                   SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(ThemeEntry.CONTENT_URI, id);
                 }
                 break;
             case GENRES:
-                id = database.insert(GenreEntry.TABLE_NAME, null, values);
+                id = database.insertWithOnConflict(GenreEntry.TABLE_NAME,
+                                                   null,
+                                                   values,
+                                                   SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(GenreEntry.CONTENT_URI, id);
                 }
