@@ -17,6 +17,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.scheffer.erik.videogamewishlist.R;
 import com.scheffer.erik.videogamewishlist.converters.GameConverter;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract;
@@ -53,6 +56,8 @@ public class GameDetailActivity extends AppCompatActivity {
     TextView themesTextView;
     @BindView(R.id.videos_recyclerView)
     RecyclerView videosRecyclerView;
+    @BindView(R.id.adView)
+    AdView adView;
 
     private boolean isSaved = false;
 
@@ -62,6 +67,11 @@ public class GameDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
         ButterKnife.bind(this);
+
+        MobileAds.initialize(this, "ca-app-pub-8540885734073963~9962865212");
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         final Game game = getIntent().getParcelableExtra(GAME_EXTRA);
 

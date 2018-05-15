@@ -115,4 +115,9 @@
     <string name="any_genre">Any genre</string>
     <string name="any_theme">Any theme</string>
     <string name="title_activity_search">Search game</string>
+
+    <!--test ad id-->
+    <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
+    <!--real ad id-->
+    <string name="banner_ad_unit_id">ca-app-pub-8540885734073963/5195546273</string>
 </resources>
