@@ -1,9 +1,12 @@
 package com.scheffer.erik.videogamewishlist.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.scheffer.erik.videogamewishlist.R;
+import com.scheffer.erik.videogamewishlist.converters.GameConverter;
+import com.scheffer.erik.videogamewishlist.database.WishlistContract;
 import com.scheffer.erik.videogamewishlist.models.Game;
 import com.scheffer.erik.videogamewishlist.models.Genre;
 import com.scheffer.erik.videogamewishlist.models.Platform;
@@ -47,7 +52,9 @@ public class GameDetailActivity extends AppCompatActivity {
     @BindView(R.id.themes)
     TextView themesTextView;
     @BindView(R.id.videos_recyclerView)
-    RecyclerView videosReciclerView;
+    RecyclerView videosRecyclerView;
+
+    private boolean isSaved = false;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -56,15 +63,7 @@ public class GameDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_detail);
         ButterKnife.bind(this);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        Game game = getIntent().getParcelableExtra(GAME_EXTRA);
+        final Game game = getIntent().getParcelableExtra(GAME_EXTRA);
 
         if (game != null) {
             toolbar.setTitle(game.getName());
@@ -107,14 +106,53 @@ public class GameDetailActivity extends AppCompatActivity {
             }
             genresTextView.setText(themesBuilder.toString());
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            videosReciclerView.setHasFixedSize(true);
-            videosReciclerView.setLayoutManager(linearLayoutManager);
-            videosReciclerView.addItemDecoration(
-                    new DividerItemDecoration(this,
-                                              linearLayoutManager.getOrientation()));
-            videosReciclerView.setAdapter(new VideoAdapter(game.getVideos()));
+            if (game.getVideos() != null) {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                videosRecyclerView.setHasFixedSize(true);
+                videosRecyclerView.setLayoutManager(linearLayoutManager);
+                videosRecyclerView.addItemDecoration(
+                        new DividerItemDecoration(this,
+                                                  linearLayoutManager.getOrientation()));
+                videosRecyclerView.setAdapter(new VideoAdapter(game.getVideos()));
+            }
+
+            Cursor cursor = getContentResolver()
+                    .query(WishlistContract.GameEntry.CONTENT_URI.buildUpon()
+                                                                 .appendPath(
+                                                                         String.valueOf(game.getId()))
+                                                                 .build(),
+                           null,
+                           null,
+                           null,
+                           null);
+            if (cursor != null && cursor.getCount() > 0) {
+                setSaved(true);
+                cursor.close();
+            }
         }
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isSaved) {
+                    getContentResolver()
+                            .delete(WishlistContract.GameEntry.CONTENT_URI.buildUpon()
+                                                                          .appendPath(
+                                                                                  String.valueOf(
+                                                                                          game.getId()))
+                                                                          .build(),
+                                    null,
+                                    null);
+                    setSaved(false);
+                } else {
+                    getContentResolver().insert(WishlistContract.GameEntry.CONTENT_URI,
+                                                GameConverter.toContentValues(game));
+                    setSaved(true);
+                }
+                LocalBroadcastManager.getInstance(GameDetailActivity.this)
+                                     .sendBroadcast(new Intent(WishlistActivity.DATABASE_UPDATE_ACTION));
+            }
+        });
     }
 
     @Override
@@ -126,5 +164,16 @@ public class GameDetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setSaved(boolean isSaved) {
+        this.isSaved = isSaved;
+        if (this.isSaved) {
+            fab.setImageDrawable(ContextCompat.getDrawable(this,
+                                                           R.drawable.ic_favorite_black_24dp));
+        } else {
+            fab.setImageDrawable(ContextCompat.getDrawable(this,
+                                                           R.drawable.ic_favorite_border_black_24dp));
+        }
     }
 }

@@ -73,7 +73,7 @@ public class WishlistContentProvider extends ContentProvider {
             case GAMES_WITH_ID:
                 String id = uri.getPathSegments().get(1);
                 favoritesDeleted = database.delete(GameEntry.TABLE_NAME,
-                                                   GameEntry._ID + "=?",
+                                                   GameEntry.COLUMN_EXTERNAL_ID + "=?",
                                                    new String[]{String.valueOf(id)});
                 break;
             default:

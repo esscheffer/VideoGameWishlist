@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 public class SearchFormActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    static final int PLATFORMS_LOADER = 101;
-    static final int GENRES_LOADER = 102;
-    static final int THEMES_LOADER = 103;
+    private static final int PLATFORMS_LOADER = 101;
+    private static final int GENRES_LOADER = 102;
+    private static final int THEMES_LOADER = 103;
 
     @BindView(R.id.title_inputText)
     TextInputEditText titleInputText;

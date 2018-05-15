@@ -4,10 +4,11 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.FieldNamingPolicy;
@@ -16,12 +17,12 @@ import com.google.gson.reflect.TypeToken;
 import com.scheffer.erik.videogamewishlist.BuildConfig;
 import com.scheffer.erik.videogamewishlist.R;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract;
-import com.scheffer.erik.videogamewishlist.fragments.GameListFragment;
 import com.scheffer.erik.videogamewishlist.models.Game;
 import com.scheffer.erik.videogamewishlist.models.Genre;
 import com.scheffer.erik.videogamewishlist.models.IGDBGame;
 import com.scheffer.erik.videogamewishlist.models.Platform;
 import com.scheffer.erik.videogamewishlist.models.Theme;
+import com.scheffer.erik.videogamewishlist.recyclerviewadapters.GameRecyclerViewAdapter;
 
 import org.json.JSONArray;
 
@@ -37,8 +38,6 @@ import wrapper.IGDBWrapper;
 import wrapper.Parameters;
 import wrapper.Version;
 
-import static com.scheffer.erik.videogamewishlist.fragments.GameListFragment.GAMES_LIST_KEY;
-
 public class GameSearchListActivity extends AppCompatActivity {
 
     public static final String GAME_TITLE_EXTRA = "game-title";
@@ -52,8 +51,8 @@ public class GameSearchListActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.search_list_info_text)
     TextView infoText;
-    @BindView(R.id.fragment_container)
-    FrameLayout fragmentLayout;
+    @BindView(R.id.game_list)
+    RecyclerView gamesRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,7 @@ public class GameSearchListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        fragmentLayout.setVisibility(View.GONE);
+        gamesRecyclerView.setVisibility(View.GONE);
         infoText.setVisibility(View.VISIBLE);
 
         infoText.setText(R.string.loading_game_list);
@@ -223,23 +222,16 @@ public class GameSearchListActivity extends AppCompatActivity {
                 public void run() {
                     if (games.isEmpty()) {
                         infoText.setText(R.string.no_games_found);
+                    } else {
+                        gamesRecyclerView.setVisibility(View.VISIBLE);
+                        infoText.setVisibility(View.GONE);
+
+                        gamesRecyclerView.setLayoutManager(new LinearLayoutManager(
+                                GameSearchListActivity.this));
+                        gamesRecyclerView.setAdapter(new GameRecyclerViewAdapter(games));
                     }
-                    GameListFragment gameListFragment = new GameListFragment();
-                    Bundle fragmentArgs = new Bundle();
-                    fragmentArgs.putParcelableArrayList(GAMES_LIST_KEY, games);
-                    gameListFragment.setArguments(fragmentArgs);
-
-
-                    fragmentLayout.setVisibility(View.VISIBLE);
-                    infoText.setVisibility(View.GONE);
-
-                    getSupportFragmentManager().beginTransaction()
-                                               .add(R.id.fragment_container, gameListFragment)
-                                               .commit();
                 }
             });
-
-
         }
 
         @Override

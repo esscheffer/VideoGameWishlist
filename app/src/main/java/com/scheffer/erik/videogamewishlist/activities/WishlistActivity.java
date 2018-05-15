@@ -1,48 +1,53 @@
 package com.scheffer.erik.videogamewishlist.activities;
 
-import android.content.ContentUris;
-import android.content.ContentValues;
+import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.IntentFilter;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.scheffer.erik.videogamewishlist.R;
 import com.scheffer.erik.videogamewishlist.converters.GameConverter;
-import com.scheffer.erik.videogamewishlist.converters.PlatformConverter;
-import com.scheffer.erik.videogamewishlist.database.WishlistContract.GameEntry;
-import com.scheffer.erik.videogamewishlist.database.WishlistContract.GamePlatformEntry;
-import com.scheffer.erik.videogamewishlist.database.WishlistContract.PlatformEntry;
-import com.scheffer.erik.videogamewishlist.database.WishlistDbHelper;
-import com.scheffer.erik.videogamewishlist.fragments.GameListFragment;
+import com.scheffer.erik.videogamewishlist.database.WishlistContract;
 import com.scheffer.erik.videogamewishlist.models.Game;
-import com.scheffer.erik.videogamewishlist.models.Genre;
-import com.scheffer.erik.videogamewishlist.models.Image;
-import com.scheffer.erik.videogamewishlist.models.Platform;
-import com.scheffer.erik.videogamewishlist.models.Theme;
-import com.scheffer.erik.videogamewishlist.models.Video;
-import com.scheffer.erik.videogamewishlist.utils.TestUtils;
+import com.scheffer.erik.videogamewishlist.recyclerviewadapters.GameRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.scheffer.erik.videogamewishlist.fragments.GameListFragment.GAMES_LIST_KEY;
+public class WishlistActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
-public class WishlistActivity extends AppCompatActivity {
-    @BindView(R.id.create_button)
-    Button createButton;
-    @BindView(R.id.delete_button)
-    Button deleteButton;
+    private static final int GAMES_LOADER = 501;
+
+    public static final String DATABASE_UPDATE_ACTION = "DATABASE_CHANGE";
+
+    @BindView(R.id.wishlist_info_text)
+    TextView infoText;
+    @BindView(R.id.game_list)
+    RecyclerView gamesRecyclerView;
+
+    GameRecyclerViewAdapter gameRecyclerViewAdapter;
+    BroadcastReceiver databaseChangeReceiver;
+
+    private ArrayList<Game> games = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,152 +62,34 @@ public class WishlistActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(WishlistActivity.this, SearchFormActivity.class));
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
 
-        GameListFragment gameListFragment = new GameListFragment();
+        infoText.setVisibility(View.VISIBLE);
+        gamesRecyclerView.setVisibility(View.GONE);
 
-        // In case this activity was started with special instructions from an
-        // Intent, pass the Intent's extras to the fragment as arguments
+        infoText.setText(R.string.loading_game_list);
+        getLoaderManager().initLoader(GAMES_LOADER, null, this);
 
-        ArrayList<Game> games = new ArrayList<>();
-        games.add(TestUtils.getMockGame());
-        Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putParcelableArrayList(GAMES_LIST_KEY, games);
-        gameListFragment.setArguments(fragmentArgs);
-
-        // Add the fragment to the 'fragment_container' FrameLayout
-        getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.fragment_container, gameListFragment).commit();
-
-        createButton.setOnClickListener(new View.OnClickListener() {
+        databaseChangeReceiver = new BroadcastReceiver() {
             @Override
-            public void onClick(View v) {
-//                databaseInsert();
-                contentProviderInsert();
+            public void onReceive(Context context, Intent intent) {
+                getLoaderManager().restartLoader(GAMES_LOADER, null, WishlistActivity.this);
             }
-        });
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WishlistDbHelper dbHelper = new WishlistDbHelper(WishlistActivity.this);
-                final SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-                int deleted = database.delete(GameEntry.TABLE_NAME,
-                                              GameEntry.COLUMN_EXTERNAL_ID + "=?",
-                                              new String[]{String.valueOf(0)});
-                System.out.println(deleted);
-            }
-        });
-    }
-
-    private void databaseInsert() {
-        int platformExternalId = 15;
-
-        WishlistDbHelper dbHelper = new WishlistDbHelper(WishlistActivity.this);
-        final SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-        ContentValues gameValues = new ContentValues();
-        gameValues.put(GameEntry.COLUMN_EXTERNAL_ID, 0);
-        gameValues.put(GameEntry.COLUMN_NAME, "title");
-        gameValues.put(GameEntry.COLUMN_SUMMARY, "sumary");
-        gameValues.put(GameEntry.COLUMN_RATING, 0);
-        long newGameId = database.insert(GameEntry.TABLE_NAME, null, gameValues);
-
-        ContentValues platformValues = new ContentValues();
-        platformValues.put(PlatformEntry.COLUMN_EXTERNAL_ID, platformExternalId);
-        platformValues.put(PlatformEntry.COLUMN_NAME, "platform name");
-        long newPlatformId = database.insert(PlatformEntry.TABLE_NAME, null, platformValues);
-
-        ContentValues gamePlatformValues = new ContentValues();
-        gamePlatformValues.put(GamePlatformEntry.COLUMN_GAME_ID, newGameId);
-        gamePlatformValues.put(GamePlatformEntry.COLUMN_PLATFORM_EXTERNAL_ID,
-                               platformExternalId);
-        long newGamePlatformId = database.insert(GamePlatformEntry.TABLE_NAME,
-                                                 null,
-                                                 gamePlatformValues);
-    }
-
-    private void contentProviderInsert() {
-        Game game = new Game();
-        game.setName("name");
-        game.setSummary("summary");
-        game.setRating(5.5);
-
-        Image cover = new Image();
-        cover.setUrl("url");
-        cover.setCloudinaryId("id");
-        game.setCover(cover);
-
-        Platform p1 = new Platform();
-        p1.setId(1);
-        p1.setName("p1");
-        Platform p2 = new Platform();
-        p2.setId(2);
-        p2.setName("p2");
-        List<Platform> platforms = new ArrayList<>();
-        platforms.add(p1);
-        platforms.add(p2);
-        game.setPlatforms(platforms);
-
-        Uri platformUri = getContentResolver().insert(PlatformEntry.CONTENT_URI,
-                                                      PlatformConverter.toContentValues(p1));
-        long platformId = ContentUris.parseId(platformUri);
-
-        Genre g1 = new Genre();
-        g1.setId(1);
-        g1.setName("g1");
-        Genre g2 = new Genre();
-        g2.setId(2);
-        g2.setName("g2");
-        List<Genre> genres = new ArrayList<>();
-        genres.add(g1);
-        genres.add(g2);
-        game.setGenres(genres);
-
-        Theme t1 = new Theme();
-        t1.setId(1);
-        t1.setName("t1");
-        Theme t2 = new Theme();
-        t2.setId(2);
-        t2.setName("t2");
-        List<Theme> themes = new ArrayList<>();
-        themes.add(t1);
-        themes.add(t2);
-        game.setThemes(themes);
-
-        Video v1 = new Video();
-        v1.setName("v1");
-        v1.setVideoId("id1");
-        Video v2 = new Video();
-        v2.setName("v2");
-        v2.setVideoId("id2");
-        List<Video> videos = new ArrayList<>();
-        videos.add(v1);
-        videos.add(v2);
-        game.setVideos(videos);
-
-        Uri uri = getContentResolver().insert(GameEntry.CONTENT_URI,
-                                              GameConverter.toContentValues(game));
-        long gameId = ContentUris.parseId(uri);
-        System.out.println(gameId);
+        };
+        LocalBroadcastManager.getInstance(this)
+                             .registerReceiver(databaseChangeReceiver,
+                                               new IntentFilter(DATABASE_UPDATE_ACTION));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_wishlist, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -211,5 +98,52 @@ public class WishlistActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this,
+                                Uri.withAppendedPath(WishlistContract.BASE_CONTENT_URI,
+                                                     WishlistContract.PATH_GAMES),
+                                null,
+                                null,
+                                null,
+                                WishlistContract.GameEntry.COLUMN_RATING + " DESC");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        games.clear();
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            games.add(GameConverter.fromCursor(cursor));
+        }
+
+        if (games.isEmpty()) {
+            infoText.setText(R.string.no_games_found);
+            infoText.setVisibility(View.VISIBLE);
+            gamesRecyclerView.setVisibility(View.GONE);
+        } else {
+            gamesRecyclerView.setVisibility(View.VISIBLE);
+            infoText.setVisibility(View.GONE);
+
+            if (gameRecyclerViewAdapter != null) {
+                gameRecyclerViewAdapter.notifyDataSetChanged();
+            } else {
+                gamesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                gameRecyclerViewAdapter = new GameRecyclerViewAdapter(games);
+                gamesRecyclerView.setAdapter(gameRecyclerViewAdapter);
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(databaseChangeReceiver);
+        super.onDestroy();
     }
 }
