@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "960523576503",
+    "firebase_url": "https://videogamewishlist-92b2a.firebaseio.com",
+    "project_id": "videogamewishlist-92b2a",
+    "storage_bucket": "videogamewishlist-92b2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:960523576503:android:00e0beeb183e8ea4",
+        "android_client_info": {
+          "package_name": "com.scheffer.erik.videogamewishlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "960523576503-pgjk1r3rm8qccqit7qddtlie7ndn87ar.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scheffer.erik.videogamewishlist",
+            "certificate_hash": "478cfd6d5a1b77e3a8d0c1851be2d12162f6e236"
+          }
+        },
+        {
+          "client_id": "960523576503-eovln0rqpr1khp0je9jlp2vomkiurng7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY8cQsw4N37HJ3b3ebfNW6kL-V4z5P94Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "960523576503-eovln0rqpr1khp0je9jlp2vomkiurng7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
