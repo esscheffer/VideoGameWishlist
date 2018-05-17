@@ -12,6 +12,10 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+androidExtensions {
+    experimental = true
+}
+
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }

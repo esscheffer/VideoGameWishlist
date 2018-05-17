@@ -26,9 +26,10 @@ class GameRecyclerViewAdapter(private val games: List<Game>)
             game = games[position]
             view.game_title.text = games[position].name
             view.game_rating.text = String.format("%.2f", games[position].rating)
-            if (game.cover != null) {
+            val cover = game.cover
+            if (cover != null) {
                 Picasso.get()
-                        .load(IGDBImageUtils.getImageUrl(holder.game.cover, IGDBImageUtils.THUMB))
+                        .load(IGDBImageUtils.getImageUrl(cover, IGDBImageUtils.THUMB))
                         .placeholder(R.drawable.ic_image_off_black_24dp)
                         .into(holder.view.cover_image)
             } else {
