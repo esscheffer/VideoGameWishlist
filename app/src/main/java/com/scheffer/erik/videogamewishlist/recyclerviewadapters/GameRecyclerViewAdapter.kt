@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.scheffer.erik.videogamewishlist.R
 import com.scheffer.erik.videogamewishlist.activities.GameDetailActivity
-import com.scheffer.erik.videogamewishlist.activities.GameDetailActivity.GAME_EXTRA
+import com.scheffer.erik.videogamewishlist.activities.GameDetailActivity.Companion.GAME_EXTRA
 import com.scheffer.erik.videogamewishlist.models.Game
 import com.scheffer.erik.videogamewishlist.utils.IGDBImageUtils
 import com.squareup.picasso.Picasso

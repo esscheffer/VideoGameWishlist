@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/summary"
+            android:id="@+id/summary_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/large_margin"
@@ -40,10 +40,10 @@
             android:layout_marginTop="@dimen/large_margin"
             android:text="@string/rating_lable"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/summary" />
+            app:layout_constraintTop_toBottomOf="@+id/summary_text" />
 
         <TextView
-            android:id="@+id/rating"
+            android:id="@+id/rating_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -59,18 +59,23 @@
             android:layout_marginStart="@dimen/simple_margin"
             android:layout_marginTop="@dimen/large_margin"
             android:text="@string/platforms_lable"
+            app:layout_constraintEnd_toStartOf="@+id/platforms_text"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rating_lable" />
 
         <TextView
-            android:id="@+id/platforms"
-            android:layout_width="wrap_content"
+            android:id="@+id/platforms_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/simple_margin"
             app:layout_constraintBottom_toBottomOf="@+id/platforms_lable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/platforms_lable"
             app:layout_constraintTop_toTopOf="@+id/platforms_lable"
-            tools:text="Platform 1, Platform 2, Platform 3" />
+            tools:text="Platform 1, Platform 2, Platform 3, Platform 4, Platform 5, Platform 6" />
 
         <TextView
             android:id="@+id/genres_lable"
@@ -79,18 +84,22 @@
             android:layout_marginStart="@dimen/simple_margin"
             android:layout_marginTop="@dimen/large_margin"
             android:text="@string/genres_lable"
+            app:layout_constraintEnd_toStartOf="@+id/genres_text"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/platforms_lable" />
 
         <TextView
-            android:id="@+id/genres"
-            android:layout_width="wrap_content"
+            android:id="@+id/genres_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/simple_margin"
             app:layout_constraintBottom_toBottomOf="@+id/genres_lable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/genres_lable"
             app:layout_constraintTop_toTopOf="@+id/genres_lable"
-            tools:text="Genre 1, Genre 2, Genre 3" />
+            tools:text="Genre 1, Genre 2, Genre 3, Genre 1, Genre 2, Genre 3, Genre 1, Genre 2, Genre 3" />
 
         <TextView
             android:id="@+id/themes_lable"
@@ -103,7 +112,7 @@
             app:layout_constraintTop_toBottomOf="@+id/genres_lable" />
 
         <TextView
-            android:id="@+id/themes"
+            android:id="@+id/themes_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/simple_margin"
