@@ -35,7 +35,7 @@ object SyncUtils {
             newAccount = true
         }
 
-        if (newAccount || !setupComplete) {
+        if (!newAccount && !setupComplete) {
             triggerRefresh()
             PreferenceManager.getDefaultSharedPreferences(context).edit()
                     .putBoolean(PREF_SETUP_COMPLETE, true).apply()
