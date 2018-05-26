@@ -31,7 +31,7 @@ public class TestUtils {
         List<Platform> platforms = new ArrayList<>();
         platforms.add(p1);
         platforms.add(p2);
-        game.setPlatforms(platforms);
+//        game.setPlatforms(platforms);
 
         Genre g1 = new Genre();
         g1.setId(1);
@@ -42,7 +42,7 @@ public class TestUtils {
         List<Genre> genres = new ArrayList<>();
         genres.add(g1);
         genres.add(g2);
-        game.setGenres(genres);
+//        game.setGenres(genres);
 
         Theme t1 = new Theme();
         t1.setId(1);
@@ -53,7 +53,7 @@ public class TestUtils {
         List<Theme> themes = new ArrayList<>();
         themes.add(t1);
         themes.add(t2);
-        game.setThemes(themes);
+//        game.setThemes(themes);
 
         Video v1 = new Video();
         v1.setName("v1");
@@ -64,7 +64,7 @@ public class TestUtils {
         List<Video> videos = new ArrayList<>();
         videos.add(v1);
         videos.add(v2);
-        game.setVideos(videos);
+//        game.setVideos(videos);
 
         return game;
     }

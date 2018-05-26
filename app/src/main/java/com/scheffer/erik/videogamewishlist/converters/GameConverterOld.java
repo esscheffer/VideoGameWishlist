@@ -14,7 +14,7 @@ import com.scheffer.erik.videogamewishlist.models.Video;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameConverter {
+public class GameConverterOld {
     public static ContentValues toContentValues(Game game) {
         ContentValues contentValues = new ContentValues();
 
@@ -84,7 +84,7 @@ public class GameConverter {
                 platforms.add(platform);
             }
         }
-        game.setPlatforms(platforms);
+//        game.setPlatforms(platforms);
 
         List<Genre> genres = new ArrayList<>();
         String genresString = cursor.getString(cursor.getColumnIndex(GameEntry.COLUMN_GENRES));
@@ -96,7 +96,7 @@ public class GameConverter {
                 genres.add(genre);
             }
         }
-        game.setGenres(genres);
+//        game.setGenres(genres);
 
         List<Theme> themes = new ArrayList<>();
         String themesString = cursor.getString(cursor.getColumnIndex(GameEntry.COLUMN_THEMES));
@@ -108,7 +108,7 @@ public class GameConverter {
                 themes.add(theme);
             }
         }
-        game.setThemes(themes);
+//        game.setThemes(themes);
 
         List<Video> videos = new ArrayList<>();
         String videosString = cursor.getString(cursor.getColumnIndex(GameEntry.COLUMN_VIDEOS));
@@ -122,7 +122,7 @@ public class GameConverter {
                 videos.add(video);
             }
         }
-        game.setVideos(videos);
+//        game.setVideos(videos);
 
         return game;
     }

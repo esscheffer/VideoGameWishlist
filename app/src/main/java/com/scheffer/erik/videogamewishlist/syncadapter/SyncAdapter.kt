@@ -5,16 +5,11 @@ import android.content.*
 import android.os.Bundle
 import android.preference.PreferenceManager
 import callback.OnSuccessCallback
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.scheffer.erik.videogamewishlist.BuildConfig
-import com.scheffer.erik.videogamewishlist.converters.GenreConverter
-import com.scheffer.erik.videogamewishlist.converters.PlatformConverter
-import com.scheffer.erik.videogamewishlist.converters.ThemeConverter
-import com.scheffer.erik.videogamewishlist.database.WishlistContract
 import com.scheffer.erik.videogamewishlist.models.Genre
 import com.scheffer.erik.videogamewishlist.models.Platform
 import com.scheffer.erik.videogamewishlist.models.Theme
+import io.realm.Realm
 import org.json.JSONArray
 import wrapper.IGDBWrapper
 import wrapper.Parameters
@@ -45,14 +40,11 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
 
         wrapper.genres(params, object : OnSuccessCallback {
             override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Genre>>() {
-
-                }.type
-                val genres = Gson().fromJson<List<Genre>>(result.toString(), listType)
-
-                for (genre in genres) {
-                    contentResolver.insert(WishlistContract.GenreEntry.CONTENT_URI,
-                                           GenreConverter.toContentValues(genre))
+                Realm.getDefaultInstance().run {
+                    executeTransaction {
+                        it.createOrUpdateAllFromJson(Genre::class.java, result)
+                    }
+                    close()
                 }
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
@@ -66,14 +58,11 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
 
         wrapper.themes(params, object : OnSuccessCallback {
             override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Theme>>() {
-
-                }.type
-                val themes = Gson().fromJson<List<Theme>>(result.toString(), listType)
-
-                for (theme in themes) {
-                    contentResolver.insert(WishlistContract.ThemeEntry.CONTENT_URI,
-                                           ThemeConverter.toContentValues(theme))
+                Realm.getDefaultInstance().run {
+                    executeTransaction {
+                        it.createOrUpdateAllFromJson(Theme::class.java, result)
+                    }
+                    close()
                 }
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
@@ -95,7 +84,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                 "6," +      //PC (Microsoft Windows)
                 "37," +     //Nintendo 3DS
                 "48," +     //PlayStation 4
-                "17," +     //Mac
+                "14," +     //Mac
                 "20," +     //Nintendo DS
                 "34," +     //Android
                 "9," +      //PlayStation 3
@@ -113,14 +102,11 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
         params.addIds(popularPlatformsIds)
         wrapper.platforms(params, object : OnSuccessCallback {
             override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Platform>>() {
-
-                }.type
-                val platforms = Gson().fromJson<List<Platform>>(result.toString(), listType)
-
-                for (platform in platforms) {
-                    contentResolver.insert(WishlistContract.PlatformEntry.CONTENT_URI,
-                                           PlatformConverter.toContentValues(platform))
+                Realm.getDefaultInstance().run {
+                    executeTransaction {
+                        it.createOrUpdateAllFromJson(Platform::class.java, result)
+                    }
+                    close()
                 }
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.scheffer.erik.videogamewishlist.R
 import com.scheffer.erik.videogamewishlist.activities.GameDetailActivity
 import com.scheffer.erik.videogamewishlist.activities.GameDetailActivity.Companion.GAME_EXTRA
+import com.scheffer.erik.videogamewishlist.converters.gameToIGDBGame
 import com.scheffer.erik.videogamewishlist.models.Game
 import com.scheffer.erik.videogamewishlist.utils.IGDBImageUtils
 import com.squareup.picasso.Picasso
@@ -37,7 +38,7 @@ class GameRecyclerViewAdapter(private val games: List<Game>)
             }
 
             holder.view.setOnClickListener { view ->
-                view.context.startActivity<GameDetailActivity>(GAME_EXTRA to holder.game)
+                view.context.startActivity<GameDetailActivity>(GAME_EXTRA to gameToIGDBGame(holder.game))
             }
         }
     }

@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.widget.RemoteViews;
 
 import com.scheffer.erik.videogamewishlist.R;
-import com.scheffer.erik.videogamewishlist.converters.GameConverter;
+import com.scheffer.erik.videogamewishlist.converters.GameConverterOld;
 import com.scheffer.erik.videogamewishlist.database.WishlistContract;
 import com.scheffer.erik.videogamewishlist.models.Game;
 import com.scheffer.erik.videogamewishlist.utils.IGDBImageUtils;
@@ -32,7 +32,7 @@ public class GameWidget extends AppWidgetProvider {
         if (randomGameCursor != null) {
             if (randomGameCursor.getCount() > 0) {
                 randomGameCursor.moveToFirst();
-                Game game = GameConverter.fromCursor(randomGameCursor);
+                Game game = GameConverterOld.fromCursor(randomGameCursor);
                 if (game.getCover() != null) {
                     Picasso.get()
                            .load(IGDBImageUtils.getImageUrl(game.getCover(),

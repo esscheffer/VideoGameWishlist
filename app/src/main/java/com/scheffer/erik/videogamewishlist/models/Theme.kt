@@ -1,7 +1,6 @@
 package com.scheffer.erik.videogamewishlist.models
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-@Parcelize
-data class Theme(var id: Long = 0, var name: String = "") : Parcelable
+open class Theme(@PrimaryKey var id: Long = 0, var name: String = "") : RealmObject()

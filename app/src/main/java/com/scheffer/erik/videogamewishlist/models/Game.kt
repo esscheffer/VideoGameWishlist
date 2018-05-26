@@ -1,16 +1,15 @@
 package com.scheffer.erik.videogamewishlist.models
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-
-@Parcelize
-data class Game(var id: Long = 0,
+open class Game(@PrimaryKey var id: Long = 0,
                 var name: String = "",
                 var summary: String? = null,
                 var rating: Double = 0.toDouble(),
                 var cover: Image? = null,
-                var platforms: List<Platform>? = null,
-                var genres: List<Genre>? = null,
-                var themes: List<Theme>? = null,
-                var videos: List<Video>? = null) : Parcelable
+                var platforms: RealmList<Platform>? = RealmList(),
+                var genres: RealmList<Genre>? = RealmList(),
+                var themes: RealmList<Theme>? = RealmList(),
+                var videos: RealmList<Video>? = RealmList()) : RealmObject()

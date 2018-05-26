@@ -12,7 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.scheffer.erik.videogamewishlist.R
-import com.scheffer.erik.videogamewishlist.converters.GameConverter
+import com.scheffer.erik.videogamewishlist.converters.GameConverterOld
 import com.scheffer.erik.videogamewishlist.database.WishlistContract
 import com.scheffer.erik.videogamewishlist.models.Game
 import com.scheffer.erik.videogamewishlist.recyclerviewadapters.GameRecyclerViewAdapter
@@ -77,7 +77,7 @@ class WishlistActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Curs
         games.clear()
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
-            games.add(GameConverter.fromCursor(cursor))
+            games.add(GameConverterOld.fromCursor(cursor))
             cursor.moveToNext()
         }
 
