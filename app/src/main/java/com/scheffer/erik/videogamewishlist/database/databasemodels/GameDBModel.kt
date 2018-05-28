@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.sql.language.Delete
 import com.raizlabs.android.dbflow.structure.BaseModel
 import com.scheffer.erik.videogamewishlist.database.AppDatabase
 import com.scheffer.erik.videogamewishlist.models.*
-import com.scheffer.erik.videogamewishlist.widget.fastSaveAll
+import com.scheffer.erik.videogamewishlist.utils.fastSaveAll
 
 @Table(database = AppDatabase::class, allFields = true)
 @MultipleManyToMany(value = [

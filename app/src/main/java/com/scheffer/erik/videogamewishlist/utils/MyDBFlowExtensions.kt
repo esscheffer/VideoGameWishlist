@@ -1,4 +1,4 @@
-package com.scheffer.erik.videogamewishlist.widget
+package com.scheffer.erik.videogamewishlist.utils
 
 import com.raizlabs.android.dbflow.config.FlowManager
 import com.raizlabs.android.dbflow.kotlinextensions.fastSave

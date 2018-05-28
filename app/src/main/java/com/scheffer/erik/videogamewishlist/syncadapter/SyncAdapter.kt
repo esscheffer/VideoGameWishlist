@@ -14,7 +14,7 @@ import com.scheffer.erik.videogamewishlist.BuildConfig
 import com.scheffer.erik.videogamewishlist.models.Genre
 import com.scheffer.erik.videogamewishlist.models.Platform
 import com.scheffer.erik.videogamewishlist.models.Theme
-import com.scheffer.erik.videogamewishlist.widget.fastSaveAll
+import com.scheffer.erik.videogamewishlist.utils.fastSaveAll
 import org.json.JSONArray
 import wrapper.IGDBWrapper
 import wrapper.Parameters
