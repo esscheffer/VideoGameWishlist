@@ -6,14 +6,12 @@ import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 
-import com.scheffer.erik.videogamewishlist.database.WishlistContract
-
 /**
  * Static helper methods for working with the sync framework.
  */
 object SyncUtils {
     private const val SYNC_FREQUENCY = (60 * 60 * 24 * 30).toLong()  // 30 days (in seconds)
-    private const val CONTENT_AUTHORITY = WishlistContract.AUTHORITY
+    private const val CONTENT_AUTHORITY = "com.scheffer.erik.videogamewishlist"
     private const val PREF_SETUP_COMPLETE = "setup_complete"
     private const val ACCOUNT_TYPE = "com.scheffer.erik.videogamewishlist.account"
 
@@ -49,7 +47,7 @@ object SyncUtils {
         }
         ContentResolver.requestSync(
                 GenericAccountService.GetAccount(ACCOUNT_TYPE),
-                WishlistContract.AUTHORITY,
+                CONTENT_AUTHORITY,
                 bundle)
     }
 }
