@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.scheffer.erik.videogamewishlist.activities.WishlistActivity">
+
+    <item
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:title="@string/sort_options"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/sort_rating"
+                android:title="@string/sort_by_rating" />
+            <item
+                android:id="@+id/sort_name"
+                android:title="@string/sort_by_name" />
+        </menu>
+    </item>
+</menu>

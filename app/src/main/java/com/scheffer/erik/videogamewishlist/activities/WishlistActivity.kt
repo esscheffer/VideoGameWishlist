@@ -27,6 +27,8 @@ class WishlistActivity : AppCompatActivity() {
 
     private val games = ArrayList<Game>()
 
+    private var reverseOrder: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wishlist)
@@ -54,17 +56,31 @@ class WishlistActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_wishlist, menu)
+        menuInflater.inflate(R.menu.menu_sort_options, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
+        when (item.itemId) {
+            R.id.sort_name -> {
+                if (reverseOrder) games.sortByDescending { it.name }
+                else games.sortBy { it.name }
 
-        return if (id == R.id.action_settings) {
-            true
-        } else super.onOptionsItemSelected(item)
+                reverseOrder = !reverseOrder
+                gameRecyclerViewAdapter?.notifyDataSetChanged()
+                return true
+            }
+            R.id.sort_rating -> {
+                if (reverseOrder) games.sortByDescending { it.rating }
+                else games.sortBy { it.rating }
 
+                gameRecyclerViewAdapter?.notifyDataSetChanged()
+                reverseOrder = !reverseOrder
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun reloadWishlist() {

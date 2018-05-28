@@ -3,6 +3,7 @@ package com.scheffer.erik.videogamewishlist.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import callback.OnSuccessCallback
@@ -24,6 +25,9 @@ import wrapper.Version
 class GameSearchListActivity : AppCompatActivity() {
 
     var games: MutableList<Game> = ArrayList()
+    var gameRecyclerViewAdapter: GameRecyclerViewAdapter? = null
+
+    private var reverseOrder: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +101,8 @@ class GameSearchListActivity : AppCompatActivity() {
                     search_list_info_text.visibility = View.GONE
 
                     game_list.layoutManager = LinearLayoutManager(this@GameSearchListActivity)
-                    game_list.adapter = GameRecyclerViewAdapter(games)
+                    gameRecyclerViewAdapter = GameRecyclerViewAdapter(games)
+                    game_list.adapter = gameRecyclerViewAdapter
                 }
             }
         }
@@ -108,10 +113,31 @@ class GameSearchListActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_sort_options, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
+                return true
+            }
+            R.id.sort_name -> {
+                if (reverseOrder) games.sortByDescending { it.name }
+                else games.sortBy { it.name }
+
+                gameRecyclerViewAdapter?.notifyDataSetChanged()
+                reverseOrder = !reverseOrder
+                return true
+            }
+            R.id.sort_rating -> {
+                if (reverseOrder) games.sortByDescending { it.rating }
+                else games.sortBy { it.rating }
+
+                gameRecyclerViewAdapter?.notifyDataSetChanged()
+                reverseOrder = !reverseOrder
                 return true
             }
         }
