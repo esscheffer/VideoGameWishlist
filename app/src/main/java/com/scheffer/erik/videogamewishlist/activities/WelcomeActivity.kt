@@ -7,6 +7,8 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
+import com.scheffer.erik.videogamewishlist.BuildConfig
 import com.scheffer.erik.videogamewishlist.R
 import com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.Companion.PREF_GENRES_SYNC
 import com.scheffer.erik.videogamewishlist.syncadapter.SyncAdapter.Companion.PREF_PLATFORMS_SYNC
@@ -16,8 +18,9 @@ import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_welcome.*
 import org.jetbrains.anko.startActivity
 
+
 class WelcomeActivity : AppCompatActivity() {
-    lateinit var sharedPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
+    private lateinit var sharedPreferenceChangeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     private val isCacheFullySynced: Boolean
         @Synchronized get() = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -29,7 +32,13 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
+
+        // Code to disable crashlytics in debug builds
+        val crashlyticsKit = Crashlytics.Builder()
+                .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build()
+        Fabric.with(this, crashlyticsKit)
+
         setContentView(R.layout.activity_welcome)
         fullscreen_content.systemUiVisibility =
                 (View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -38,7 +47,7 @@ class WelcomeActivity : AppCompatActivity() {
                         or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                         or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-        SyncUtils.CreateSyncAccount(this)
+        SyncUtils.createSyncAccount(this)
 
         if (isCacheFullySynced) {
             startActivity(Intent(this@WelcomeActivity, WishlistActivity::class.java))

@@ -1,20 +1,20 @@
 package com.scheffer.erik.videogamewishlist.syncadapter
 
 import android.accounts.Account
-import android.content.*
+import android.content.AbstractThreadedSyncAdapter
+import android.content.ContentProviderClient
+import android.content.Context
+import android.content.SyncResult
 import android.os.Bundle
 import android.preference.PreferenceManager
 import callback.OnSuccessCallback
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.scheffer.erik.videogamewishlist.BuildConfig
-import com.scheffer.erik.videogamewishlist.converters.GenreConverter
-import com.scheffer.erik.videogamewishlist.converters.PlatformConverter
-import com.scheffer.erik.videogamewishlist.converters.ThemeConverter
-import com.scheffer.erik.videogamewishlist.database.WishlistContract
 import com.scheffer.erik.videogamewishlist.models.Genre
 import com.scheffer.erik.videogamewishlist.models.Platform
 import com.scheffer.erik.videogamewishlist.models.Theme
+import com.scheffer.erik.videogamewishlist.widget.fastSaveAll
 import org.json.JSONArray
 import wrapper.IGDBWrapper
 import wrapper.Parameters
@@ -22,17 +22,11 @@ import wrapper.Version
 
 class SyncAdapter : AbstractThreadedSyncAdapter {
 
-    private var contentResolver: ContentResolver
-
-    constructor(context: Context, autoInitialize: Boolean) : super(context, autoInitialize) {
-        contentResolver = context.contentResolver
-    }
+    constructor(context: Context, autoInitialize: Boolean) : super(context, autoInitialize)
 
     constructor(context: Context,
                 autoInitialize: Boolean,
-                allowParallelSyncs: Boolean) : super(context, autoInitialize, allowParallelSyncs) {
-        contentResolver = context.contentResolver
-    }
+                allowParallelSyncs: Boolean) : super(context, autoInitialize, allowParallelSyncs)
 
     override fun onPerformSync(account: Account,
                                extras: Bundle,
@@ -50,10 +44,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                 }.type
                 val genres = Gson().fromJson<List<Genre>>(result.toString(), listType)
 
-                for (genre in genres) {
-                    contentResolver.insert(WishlistContract.GenreEntry.CONTENT_URI,
-                                           GenreConverter.toContentValues(genre))
-                }
+                genres.fastSaveAll()
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
                         .putBoolean(PREF_GENRES_SYNC, true).apply()
@@ -71,10 +62,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                 }.type
                 val themes = Gson().fromJson<List<Theme>>(result.toString(), listType)
 
-                for (theme in themes) {
-                    contentResolver.insert(WishlistContract.ThemeEntry.CONTENT_URI,
-                                           ThemeConverter.toContentValues(theme))
-                }
+                themes.fastSaveAll()
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
                         .putBoolean(PREF_THEMES_SYNC, true).apply()
@@ -95,7 +83,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                 "6," +      //PC (Microsoft Windows)
                 "37," +     //Nintendo 3DS
                 "48," +     //PlayStation 4
-                "17," +     //Mac
+                "14," +     //Mac
                 "20," +     //Nintendo DS
                 "34," +     //Android
                 "9," +      //PlayStation 3
@@ -118,10 +106,7 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                 }.type
                 val platforms = Gson().fromJson<List<Platform>>(result.toString(), listType)
 
-                for (platform in platforms) {
-                    contentResolver.insert(WishlistContract.PlatformEntry.CONTENT_URI,
-                                           PlatformConverter.toContentValues(platform))
-                }
+                platforms.fastSaveAll()
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit()
                         .putBoolean(PREF_PLATFORMS_SYNC, true).apply()

@@ -18,7 +18,7 @@ object SyncUtils {
     private const val ACCOUNT_TYPE = "com.scheffer.erik.videogamewishlist.account"
 
     @JvmStatic
-    fun CreateSyncAccount(context: Context) {
+    fun createSyncAccount(context: Context) {
         var newAccount = false
         val setupComplete = PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(PREF_SETUP_COMPLETE, false)

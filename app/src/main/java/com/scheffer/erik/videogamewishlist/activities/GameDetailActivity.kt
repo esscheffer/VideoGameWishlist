@@ -11,8 +11,9 @@ import android.view.MenuItem
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.scheffer.erik.videogamewishlist.R
-import com.scheffer.erik.videogamewishlist.converters.GameConverter
-import com.scheffer.erik.videogamewishlist.database.WishlistContract
+import com.scheffer.erik.videogamewishlist.converters.fromGameToGameDBModel
+import com.scheffer.erik.videogamewishlist.database.databasemodels.GameDBModel
+import com.scheffer.erik.videogamewishlist.database.getGameById
 import com.scheffer.erik.videogamewishlist.models.Game
 import com.scheffer.erik.videogamewishlist.recyclerviewadapters.VideoAdapter
 import com.scheffer.erik.videogamewishlist.utils.IGDBImageUtils
@@ -20,9 +21,14 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_game_detail.*
 import kotlinx.android.synthetic.main.content_game_detail.*
 
+
 class GameDetailActivity : AppCompatActivity() {
 
     private var isSaved = false
+    private lateinit var game: Game
+    private val gameDBModel: GameDBModel by lazy {
+        fromGameToGameDBModel(game)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +38,7 @@ class GameDetailActivity : AppCompatActivity() {
 
         adView.loadAd(AdRequest.Builder().build())
 
-        val game = intent.getParcelableExtra<Game>(GAME_EXTRA) ?: Game()
+        game = intent.getParcelableExtra(GAME_EXTRA) ?: Game()
 
         toolbar.title = game.name
         setSupportActionBar(toolbar)
@@ -60,30 +66,19 @@ class GameDetailActivity : AppCompatActivity() {
                 setHasFixedSize(true)
                 layoutManager = linearLayoutManager
                 addItemDecoration(DividerItemDecoration(this@GameDetailActivity,
-                                                        linearLayoutManager.orientation))
+                        linearLayoutManager.orientation))
                 adapter = VideoAdapter(videos)
             }
         }
 
-        val cursor = contentResolver
-                .query(WishlistContract.GameEntry.CONTENT_URI.buildUpon()
-                               .appendPath(game.id.toString())
-                               .build(), null, null, null, null)
-        if (cursor != null && cursor.count > 0) {
-            setSaved(true)
-            cursor.close()
-        }
+        setSaved(getGameById(game.id) != null)
 
         fab.setOnClickListener {
             if (isSaved) {
-                contentResolver
-                        .delete(WishlistContract.GameEntry.CONTENT_URI.buildUpon()
-                                        .appendPath(game.id.toString())
-                                        .build(), null, null)
+                gameDBModel.delete()
                 setSaved(false)
             } else {
-                contentResolver.insert(WishlistContract.GameEntry.CONTENT_URI,
-                                       GameConverter.toContentValues(game))
+                gameDBModel.save()
                 setSaved(true)
             }
             LocalBroadcastManager.getInstance(this@GameDetailActivity)
@@ -106,8 +101,8 @@ class GameDetailActivity : AppCompatActivity() {
         this.isSaved = isSaved
         fab.setImageDrawable(
                 ContextCompat.getDrawable(this,
-                                          if (isSaved) R.drawable.ic_favorite_black_24dp
-                                          else R.drawable.ic_favorite_border_black_24dp
+                        if (isSaved) R.drawable.ic_favorite_black_24dp
+                        else R.drawable.ic_favorite_border_black_24dp
                                          ))
     }
 

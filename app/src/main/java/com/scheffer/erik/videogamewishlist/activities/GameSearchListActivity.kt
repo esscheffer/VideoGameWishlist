@@ -11,7 +11,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.scheffer.erik.videogamewishlist.BuildConfig
 import com.scheffer.erik.videogamewishlist.R
-import com.scheffer.erik.videogamewishlist.database.WishlistContract
+import com.scheffer.erik.videogamewishlist.converters.fromIGDBGameToGame
 import com.scheffer.erik.videogamewishlist.models.*
 import com.scheffer.erik.videogamewishlist.recyclerviewadapters.GameRecyclerViewAdapter
 import kotlinx.android.synthetic.main.activity_game_search_list.*
@@ -20,9 +20,11 @@ import wrapper.Endpoints
 import wrapper.IGDBWrapper
 import wrapper.Parameters
 import wrapper.Version
-import java.util.*
 
 class GameSearchListActivity : AppCompatActivity() {
+
+    var games: MutableList<Game> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_search_list)
@@ -42,18 +44,15 @@ class GameSearchListActivity : AppCompatActivity() {
                 .addOrder("rating:desc")
                 .addLimit("50")
 
-        val platform = intent.getParcelableExtra<Platform>(PLATFORM_EXTRA)
-        if (platform != null) {
+        intent.getParcelableExtra<Platform>(PLATFORM_EXTRA)?.let { platform ->
             params.addFilter("[platforms][eq]=${platform.id}")
         }
 
-        val genre = intent.getParcelableExtra<Genre>(GENRE_EXTRA)
-        if (genre != null) {
+        intent.getParcelableExtra<Genre>(GENRE_EXTRA)?.let { genre ->
             params.addFilter("[genres][eq]=${genre.id}")
         }
 
-        val theme = intent.getParcelableExtra<Theme>(THEME_EXTRA)
-        if (theme != null) {
+        intent.getParcelableExtra<Theme>(THEME_EXTRA)?.let { theme ->
             params.addFilter("[theme][eq]=${theme.id}")
         }
 
@@ -88,80 +87,7 @@ class GameSearchListActivity : AppCompatActivity() {
                     .create()
                     .fromJson<ArrayList<IGDBGame>>(result.toString(), listType)
 
-            val games = ArrayList<Game>()
-            for (igdbGame in igdbGames) {
-                val game = Game()
-                game.id = igdbGame.id
-                game.name = igdbGame.name
-                game.summary = igdbGame.summary
-                game.rating = igdbGame.rating
-                game.cover = igdbGame.cover
-                game.videos = igdbGame.videos
-
-                val platforms = ArrayList<Platform>()
-                if (igdbGame.platforms != null) {
-                    for (platformId in igdbGame.platforms as List) {
-                        val cursor = contentResolver
-                                .query(WishlistContract.PlatformEntry.CONTENT_URI.buildUpon()
-                                               .appendPath(platformId.toString())
-                                               .build(), null, null, null, null)
-                        if (cursor != null) {
-                            if (cursor.count > 0) {
-                                cursor.moveToFirst()
-                                platforms.add(Platform(platformId,
-                                                       cursor.getString(cursor.getColumnIndex(
-                                                               WishlistContract.PlatformEntry.COLUMN_NAME))))
-                            }
-                            cursor.close()
-                        }
-                    }
-                }
-                game.platforms = platforms
-
-                val genres = ArrayList<Genre>()
-                if (igdbGame.genres != null) {
-                    for (genreId in igdbGame.genres as List) {
-                        val cursor = contentResolver
-                                .query(WishlistContract.GenreEntry.CONTENT_URI.buildUpon()
-                                               .appendPath(
-                                                       genreId.toString())
-                                               .build(), null, null, null, null)
-                        if (cursor != null) {
-                            if (cursor.count > 0) {
-                                cursor.moveToFirst()
-                                genres.add(Genre(genreId,
-                                                 cursor.getString(cursor.getColumnIndex(
-                                                         WishlistContract.ThemeEntry.COLUMN_NAME))))
-                            }
-                            cursor.close()
-                        }
-                    }
-                }
-                game.genres = genres
-
-                val themes = ArrayList<Theme>()
-                if (igdbGame.themes != null) {
-                    for (themeId in igdbGame.themes as List) {
-                        val cursor = contentResolver
-                                .query(WishlistContract.ThemeEntry.CONTENT_URI.buildUpon()
-                                               .appendPath(
-                                                       themeId.toString())
-                                               .build(), null, null, null, null)
-                        if (cursor != null) {
-                            if (cursor.count > 0) {
-                                cursor.moveToFirst()
-                                themes.add(Theme(themeId,
-                                                 cursor.getString(cursor.getColumnIndex(
-                                                         WishlistContract.ThemeEntry.COLUMN_NAME))))
-                            }
-                            cursor.close()
-                        }
-                    }
-                }
-                game.themes = themes
-
-                games.add(game)
-            }
+            games = igdbGames.map { fromIGDBGameToGame(it) }.toMutableList()
 
             runOnUiThread {
                 if (games.isEmpty()) {
