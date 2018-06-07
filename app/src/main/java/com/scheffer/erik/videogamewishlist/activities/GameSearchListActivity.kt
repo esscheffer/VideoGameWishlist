@@ -28,6 +28,7 @@ class GameSearchListActivity : AppCompatActivity() {
     var gameRecyclerViewAdapter: GameRecyclerViewAdapter? = null
 
     private var reverseOrder: Boolean = false
+    private val layoutManager = LinearLayoutManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,20 @@ class GameSearchListActivity : AppCompatActivity() {
 
         search_list_info_text.setText(R.string.loading_game_list)
 
+        savedInstanceState?.let {
+            layoutManager.onRestoreInstanceState(it.getParcelable(LIST_STATE_KEY))
+            @Suppress("UNCHECKED_CAST")
+            games = it.getParcelableArray(GAME_LIST_KEY).toMutableList() as MutableList<Game>
+        }
+
+        if (games.isEmpty()) {
+            loadGames()
+        } else {
+            initializeRecyclerView()
+        }
+    }
+
+    private fun loadGames() {
         val wrapper = IGDBWrapper(BuildConfig.API_KEY, Version.STANDARD, false)
 
         val params = Parameters()
@@ -80,7 +95,6 @@ class GameSearchListActivity : AppCompatActivity() {
     }
 
     private inner class MySuccessCallback : OnSuccessCallback {
-
         override fun onSuccess(result: JSONArray) {
 
             val listType = object : TypeToken<ArrayList<IGDBGame>>() {
@@ -97,12 +111,7 @@ class GameSearchListActivity : AppCompatActivity() {
                 if (games.isEmpty()) {
                     search_list_info_text.setText(R.string.no_games_found)
                 } else {
-                    game_list.visibility = View.VISIBLE
-                    search_list_info_text.visibility = View.GONE
-
-                    game_list.layoutManager = LinearLayoutManager(this@GameSearchListActivity)
-                    gameRecyclerViewAdapter = GameRecyclerViewAdapter(games)
-                    game_list.adapter = gameRecyclerViewAdapter
+                    initializeRecyclerView()
                 }
             }
         }
@@ -111,6 +120,15 @@ class GameSearchListActivity : AppCompatActivity() {
             runOnUiThread { search_list_info_text.setText(R.string.error_games_from_server) }
             error.printStackTrace()
         }
+    }
+
+    private fun initializeRecyclerView() {
+        game_list.visibility = View.VISIBLE
+        search_list_info_text.visibility = View.GONE
+
+        game_list.layoutManager = layoutManager
+        gameRecyclerViewAdapter = GameRecyclerViewAdapter(games)
+        game_list.adapter = gameRecyclerViewAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -145,6 +163,12 @@ class GameSearchListActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState())
+        state.putParcelableArray(GAME_LIST_KEY, games.toTypedArray())
+    }
+
     companion object {
         const val GAME_TITLE_EXTRA = "game-title"
         const val PLATFORM_EXTRA = "platform"
@@ -152,5 +176,8 @@ class GameSearchListActivity : AppCompatActivity() {
         const val THEME_EXTRA = "theme"
         const val MINIMUM_RATING_EXTRA = "minimum-rating"
         const val MAXIMUM_RATING_EXTRA = "maximum-rating"
+
+        private const val LIST_STATE_KEY = "list-state"
+        private const val GAME_LIST_KEY = "game-list"
     }
 }

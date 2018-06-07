@@ -15,12 +15,24 @@
       },
       "oauth_client": [
         {
+          "client_id": "960523576503-3v21ci4tm148b3laql2nqlq344r16ie7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scheffer.erik.videogamewishlist",
+            "certificate_hash": "3b30b6f02ef0cfc80e9ff9b786e52f65e62d98fa"
+          }
+        },
+        {
           "client_id": "960523576503-pgjk1r3rm8qccqit7qddtlie7ndn87ar.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.scheffer.erik.videogamewishlist",
             "certificate_hash": "478cfd6d5a1b77e3a8d0c1851be2d12162f6e236"
           }
+        },
+        {
+          "client_id": "960523576503-eovln0rqpr1khp0je9jlp2vomkiurng7.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "960523576503-eovln0rqpr1khp0je9jlp2vomkiurng7.apps.googleusercontent.com",

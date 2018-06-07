@@ -9,6 +9,6 @@ import com.raizlabs.android.dbflow.annotation.Database
         insertConflict = ConflictAction.REPLACE,
         updateConflict = ConflictAction.REPLACE)
 object AppDatabase {
-    const val NAME: String = "app"
+    const val NAME: String = "wishlist"
     const val VERSION: Int = 1
 }

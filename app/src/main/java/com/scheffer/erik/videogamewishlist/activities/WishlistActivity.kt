@@ -24,8 +24,9 @@ class WishlistActivity : AppCompatActivity() {
 
     private var gameRecyclerViewAdapter: GameRecyclerViewAdapter? = null
     private lateinit var databaseChangeReceiver: BroadcastReceiver
+    private val layoutManager = LinearLayoutManager(this)
 
-    private val games = ArrayList<Game>()
+    private var games: MutableList<Game> = ArrayList()
 
     private var reverseOrder: Boolean = false
 
@@ -52,7 +53,17 @@ class WishlistActivity : AppCompatActivity() {
                 .registerReceiver(databaseChangeReceiver,
                         IntentFilter(DATABASE_UPDATE_ACTION))
 
-        reloadWishlist()
+        savedInstanceState?.let {
+            layoutManager.onRestoreInstanceState(it.getParcelable(LIST_STATE_KEY))
+            @Suppress("UNCHECKED_CAST")
+            games = it.getParcelableArray(GAME_LIST_KEY).toMutableList() as MutableList<Game>
+        }
+
+        if (games.isEmpty()) {
+            reloadWishlist()
+        } else {
+            initializeRecyclerView()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -92,16 +103,20 @@ class WishlistActivity : AppCompatActivity() {
             wishlist_info_text.visibility = View.VISIBLE
             game_list.visibility = View.GONE
         } else {
-            game_list.visibility = View.VISIBLE
-            wishlist_info_text.visibility = View.GONE
+            initializeRecyclerView()
+        }
+    }
 
-            if (gameRecyclerViewAdapter != null) {
-                gameRecyclerViewAdapter!!.notifyDataSetChanged()
-            } else {
-                game_list.layoutManager = LinearLayoutManager(this)
-                gameRecyclerViewAdapter = GameRecyclerViewAdapter(games)
-                game_list.adapter = gameRecyclerViewAdapter
-            }
+    private fun initializeRecyclerView() {
+        game_list.visibility = View.VISIBLE
+        wishlist_info_text.visibility = View.GONE
+
+        if (gameRecyclerViewAdapter != null) {
+            gameRecyclerViewAdapter!!.notifyDataSetChanged()
+        } else {
+            game_list.layoutManager = layoutManager
+            gameRecyclerViewAdapter = GameRecyclerViewAdapter(games)
+            game_list.adapter = gameRecyclerViewAdapter
         }
     }
 
@@ -110,7 +125,16 @@ class WishlistActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    override fun onSaveInstanceState(state: Bundle) {
+        super.onSaveInstanceState(state)
+        state.putParcelable(LIST_STATE_KEY, layoutManager.onSaveInstanceState())
+        state.putParcelableArray(GAME_LIST_KEY, games.toTypedArray())
+    }
+
     companion object {
         const val DATABASE_UPDATE_ACTION = "DATABASE_CHANGE"
+
+        private const val LIST_STATE_KEY = "list-state"
+        private const val GAME_LIST_KEY = "game-list"
     }
 }
