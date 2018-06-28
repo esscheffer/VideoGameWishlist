@@ -4,9 +4,9 @@
     android:id="@+id/game_detail_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="50dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.GameDetailActivity"
-    android:paddingBottom="50dp"
     tools:showIn="@layout/activity_game_detail">
 
     <android.support.constraint.ConstraintLayout
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/simple_margin"
-            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginTop="@dimen/xlarge_margin"
             android:text="@string/genres_lable"
             app:layout_constraintEnd_toStartOf="@+id/genres_text"
             app:layout_constraintHorizontal_bias="0.5"
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/simple_margin"
-            android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginTop="@dimen/xlarge_margin"
             android:text="@string/themes_lable"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/genres_lable" />
