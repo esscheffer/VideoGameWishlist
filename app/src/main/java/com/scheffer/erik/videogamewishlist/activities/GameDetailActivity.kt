@@ -14,12 +14,15 @@ import com.scheffer.erik.videogamewishlist.R
 import com.scheffer.erik.videogamewishlist.converters.fromGameToGameDBModel
 import com.scheffer.erik.videogamewishlist.database.databasemodels.GameDBModel
 import com.scheffer.erik.videogamewishlist.database.getGameById
+import com.scheffer.erik.videogamewishlist.database.repositories.deleteGameDBModel
+import com.scheffer.erik.videogamewishlist.database.repositories.saveGameDBModel
 import com.scheffer.erik.videogamewishlist.models.Game
 import com.scheffer.erik.videogamewishlist.recyclerviewadapters.VideoAdapter
 import com.scheffer.erik.videogamewishlist.utils.IGDBImageUtils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_game_detail.*
 import kotlinx.android.synthetic.main.content_game_detail.*
+import org.jetbrains.anko.toast
 
 
 class GameDetailActivity : AppCompatActivity() {
@@ -75,11 +78,13 @@ class GameDetailActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
             if (isSaved) {
-                gameDBModel.delete()
-                setSaved(false)
+                deleteGameDBModel(gameDBModel,
+                        { setSaved(false) },
+                        { _, _ -> toast(R.string.error_deleting) })
             } else {
-                gameDBModel.save()
-                setSaved(true)
+                saveGameDBModel(gameDBModel,
+                        { setSaved(true) },
+                        { _, _ -> toast(R.string.error_saving) })
             }
             LocalBroadcastManager.getInstance(this@GameDetailActivity)
                     .sendBroadcast(Intent(WishlistActivity.DATABASE_UPDATE_ACTION))

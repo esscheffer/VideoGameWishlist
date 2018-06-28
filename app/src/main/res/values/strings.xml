@@ -27,6 +27,8 @@
     <string name="sort_options">Sort options</string>
     <string name="sort_by_rating">Sort by rating</string>
     <string name="sort_by_name">Sort by name</string>
+    <string name="error_saving">There was an error saving the game. Please, try again later</string>
+    <string name="error_deleting">There was an error deleting the game. Please, try again later</string>
 
     <!--test ad id-->
     <!--<string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>-->
