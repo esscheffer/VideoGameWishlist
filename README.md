@@ -39,3 +39,7 @@ This app uses Internet Game Database API to fetch the game data.
 
 ![](https://github.com/KireRex/VideoGameWishlist/blob/master/store-images/game_details_screen.png)
 >Game details
+
+# Play Store
+
+https://play.google.com/store/apps/details?id=com.scheffer.erik.videogamewishlist
