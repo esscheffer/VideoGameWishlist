@@ -3,7 +3,6 @@ package com.scheffer.erik.videogamewishlist.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import com.scheffer.erik.videogamewishlist.R
 import com.scheffer.erik.videogamewishlist.database.getAllGenres
 import com.scheffer.erik.videogamewishlist.database.getAllPlatforms
@@ -24,10 +23,6 @@ class SearchFormActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_form)
 
-        platforms_spinner.setTitle(resources.getString(R.string.select_platform))
-        genres_spinner.setTitle(resources.getString(R.string.select_genre))
-        themes_spinner.setTitle(resources.getString(R.string.select_theme))
-
         loadPlatforms()
         loadGenres()
         loadThemes()
@@ -36,18 +31,18 @@ class SearchFormActivity : AppCompatActivity() {
             val gameTitle = title_inputText.text.toString()
 
             var selectedPlatform: Platform? = null
-            if (platforms_spinner.selectedItemPosition > 0) {
-                selectedPlatform = platforms[platforms_spinner.selectedItemPosition - 1]
+            if (platforms_spinner.selectedIndex > 0) {
+                selectedPlatform = platforms[platforms_spinner.selectedIndex - 1]
             }
 
             var selectedGenre: Genre? = null
-            if (genres_spinner.selectedItemPosition > 0) {
-                selectedGenre = genres[genres_spinner.selectedItemPosition - 1]
+            if (genres_spinner.selectedIndex > 0) {
+                selectedGenre = genres[genres_spinner.selectedIndex - 1]
             }
 
             var selectedTheme: Theme? = null
-            if (themes_spinner.selectedItemPosition > 0) {
-                selectedTheme = themes[themes_spinner.selectedItemPosition - 1]
+            if (themes_spinner.selectedIndex > 0) {
+                selectedTheme = themes[themes_spinner.selectedIndex - 1]
             }
 
             val minimumRating = rating_rangeBar.leftIndex
@@ -67,28 +62,22 @@ class SearchFormActivity : AppCompatActivity() {
         platforms = getAllPlatforms()
         val platformsNames = mutableListOf(resources.getString(R.string.any_platform))
         platformsNames.addAll(platforms.map { it.name })
-        platforms_spinner.adapter = generateStringAdapter(platformsNames)
+        platforms_spinner.setItems(platformsNames)
     }
 
     private fun loadGenres() {
         genres = getAllGenres()
         val genresNames = mutableListOf(resources.getString(R.string.any_genre))
         genresNames.addAll(genres.map { it.name })
-        genres_spinner.adapter = generateStringAdapter(genresNames)
+        genres_spinner.setItems(genresNames)
     }
 
     private fun loadThemes() {
         themes = getAllThemes()
         val themesNames = mutableListOf(resources.getString(R.string.any_theme))
         themesNames.addAll(themes.map { it.name })
-        themes_spinner.adapter = generateStringAdapter(themesNames)
+        themes_spinner.setItems(themesNames)
     }
-
-    private fun generateStringAdapter(stringList: List<String>) =
-            ArrayAdapter(this,
-                    android.R.layout.simple_spinner_item,
-                    stringList)
-                    .apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -17,8 +17,6 @@ androidExtensions {
     experimental = true
 }
 
-def dbflow_version = "4.2.4"
-
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
@@ -38,15 +36,16 @@ android {
 //            storePassword 'password'
 //        }
 //    }
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.scheffer.erik.videogamewishlist"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 4
         versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
 
         // Add the IGBB api key to the gradle.properties file like
         // API_KEY="<your key>"
@@ -66,21 +65,24 @@ android {
 }
 
 dependencies {
+    def dbflow_version = "4.2.4"
+    def anko_version = '0.10.8'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:exifinterface:27.1.1'
-    implementation 'com.android.support:customtabs:27.1.1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:exifinterface:28.0.0'
+    implementation 'com.android.support:customtabs:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.3.0'
     implementation 'com.github.igdb:api-java:2.0.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.appyvet:materialrangebar:1.4.1'
-    implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+    implementation 'com.appyvet:materialrangebar:1.4.6'
+    implementation 'com.jaredrummler:material-spinner:1.3.1'
     implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
-    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.4'
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
 
@@ -90,17 +92,19 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
 
-    implementation 'com.google.firebase:firebase-ads:15.0.1'
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+    implementation 'com.google.firebase:firebase-ads:17.2.0'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.0@aar') {
         transitive = true
     }
 
-    implementation 'com.google.android.ads.consent:consent-library:1.0.6'
+    implementation 'com.google.android.ads.consent:consent-library:1.0.7'
+
+    compile 'com.android.support:multidex:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'
