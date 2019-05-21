@@ -1,26 +1,28 @@
 package com.scheffer.erik.videogamewishlist.activities
 
+import APICalypse
+import IGDBWrapper
+import RequestException
+import Sort
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import callback.OnSuccessCallback
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.scheffer.erik.videogamewishlist.BuildConfig
 import com.scheffer.erik.videogamewishlist.R
-import com.scheffer.erik.videogamewishlist.converters.fromIGDBGameToGame
-import com.scheffer.erik.videogamewishlist.models.*
+import com.scheffer.erik.videogamewishlist.converters.fromProtoGameToGame
+import com.scheffer.erik.videogamewishlist.models.Game
+import com.scheffer.erik.videogamewishlist.models.Genre
+import com.scheffer.erik.videogamewishlist.models.Platform
+import com.scheffer.erik.videogamewishlist.models.Theme
 import com.scheffer.erik.videogamewishlist.recyclerviewadapters.GameRecyclerViewAdapter
+import games
 import kotlinx.android.synthetic.main.activity_game_search_list.*
-import org.json.JSONArray
-import wrapper.Endpoints
-import wrapper.IGDBWrapper
-import wrapper.Parameters
-import wrapper.Version
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class GameSearchListActivity : AppCompatActivity() {
 
@@ -56,69 +58,61 @@ class GameSearchListActivity : AppCompatActivity() {
     }
 
     private fun loadGames() {
-        val wrapper = IGDBWrapper(BuildConfig.API_KEY, Version.STANDARD, false)
+        IGDBWrapper.userkey = BuildConfig.API_KEY
+        var params = APICalypse()
+                .fields("*, cover.*, videos.*")
+                .limit(50)
+                .sort("rating", Sort.DESCENDING)
 
-        val params = Parameters()
-                .addFields("*")
-                .addOrder("rating:desc")
-                .addLimit("50")
+        val whereParams = mutableListOf<String>()
 
         intent.getParcelableExtra<Platform>(PLATFORM_EXTRA)?.let { platform ->
-            params.addFilter("[platforms][eq]=${platform.id}")
+            whereParams.add("platforms = ${platform.id}")
         }
 
         intent.getParcelableExtra<Genre>(GENRE_EXTRA)?.let { genre ->
-            params.addFilter("[genres][eq]=${genre.id}")
+            whereParams.add("genres = ${genre.id}")
         }
 
         intent.getParcelableExtra<Theme>(THEME_EXTRA)?.let { theme ->
-            params.addFilter("[theme][eq]=${theme.id}")
+            whereParams.add("themes = ${theme.id}")
         }
 
         val minimumRating = intent.getIntExtra(MINIMUM_RATING_EXTRA, -1)
         if (minimumRating > 0) {
-            params.addFilter("[rating][gte]=$minimumRating")
+            whereParams.add("rating >= $minimumRating")
         }
 
         val maximumRating = intent.getIntExtra(MAXIMUM_RATING_EXTRA, 101)
         if (maximumRating < 100) {
-            params.addFilter("[rating][lte]=$maximumRating")
+            whereParams.add("rating <= $maximumRating")
         }
 
         val gameTitle = intent.getStringExtra(GAME_TITLE_EXTRA) ?: ""
-        if (!gameTitle.isEmpty()) {
-            params.addSearch(gameTitle)
-            wrapper.search(Endpoints.GAMES, params, MySuccessCallback())
+        if (gameTitle.isNotEmpty()) {
+            whereParams.add("name ~ *\"$gameTitle\"*")
+        }
+
+        if (whereParams.isNotEmpty()) {
+            params = params.where(whereParams.joinToString(" & ") + " & rating != null")
         } else {
-            wrapper.games(params, MySuccessCallback())
+            params = params.where("rating != null")
         }
-    }
 
-    private inner class MySuccessCallback : OnSuccessCallback {
-        override fun onSuccess(result: JSONArray) {
-
-            val listType = object : TypeToken<ArrayList<IGDBGame>>() {
-
-            }.type
-            val igdbGames = GsonBuilder()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .create()
-                    .fromJson<ArrayList<IGDBGame>>(result.toString(), listType)
-
-            games = igdbGames.map { fromIGDBGameToGame(it) }.toMutableList()
-
-            runOnUiThread {
-                if (games.isEmpty()) {
-                    search_list_info_text.setText(R.string.no_games_found)
-                } else {
-                    initializeRecyclerView()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                games = IGDBWrapper.games(params).map(::fromProtoGameToGame).toMutableList()
+                runOnUiThread {
+                    if (games.isEmpty()) {
+                        search_list_info_text.setText(R.string.no_games_found)
+                    } else {
+                        initializeRecyclerView()
+                    }
                 }
+            } catch (error: RequestException) {
+                runOnUiThread { search_list_info_text.setText(R.string.error_games_from_server) }
+                error.printStackTrace()
             }
-        }
-
-        override fun onError(error: Exception) {
-            runOnUiThread { search_list_info_text.setText(R.string.error_games_from_server) }
-            error.printStackTrace()
         }
     }
 

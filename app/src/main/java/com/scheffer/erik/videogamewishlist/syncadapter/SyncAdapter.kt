@@ -1,5 +1,8 @@
 package com.scheffer.erik.videogamewishlist.syncadapter
 
+import APICalypse
+import IGDBWrapper
+import RequestException
 import android.accounts.Account
 import android.content.AbstractThreadedSyncAdapter
 import android.content.ContentProviderClient
@@ -7,18 +10,16 @@ import android.content.Context
 import android.content.SyncResult
 import android.os.Bundle
 import android.preference.PreferenceManager
-import callback.OnSuccessCallback
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.scheffer.erik.videogamewishlist.BuildConfig
-import com.scheffer.erik.videogamewishlist.models.Genre
-import com.scheffer.erik.videogamewishlist.models.Platform
-import com.scheffer.erik.videogamewishlist.models.Theme
+import com.scheffer.erik.videogamewishlist.converters.fromProtoGenreToGenre
+import com.scheffer.erik.videogamewishlist.converters.fromProtoPlatformToPlatform
+import com.scheffer.erik.videogamewishlist.converters.fromProtoThemeToTheme
 import com.scheffer.erik.videogamewishlist.utils.fastSaveAll
-import org.json.JSONArray
-import wrapper.IGDBWrapper
-import wrapper.Parameters
-import wrapper.Version
+import genres
+import platforms
+import themes
+
+private const val QUERY_CHUNK_SIZE = 10
 
 class SyncAdapter : AbstractThreadedSyncAdapter {
 
@@ -33,89 +34,79 @@ class SyncAdapter : AbstractThreadedSyncAdapter {
                                authority: String,
                                provider: ContentProviderClient,
                                syncResult: SyncResult) {
-        val params = Parameters().addFields("*").addLimit("50")
+        IGDBWrapper.userkey = BuildConfig.API_KEY
 
-        val wrapper = IGDBWrapper(BuildConfig.API_KEY, Version.STANDARD, false)
+        val params = APICalypse()
+                .fields("*")
+                .limit(50)
 
-        wrapper.genres(params, object : OnSuccessCallback {
-            override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Genre>>() {
+        try {
+            IGDBWrapper.genres(params)
+                    .map(::fromProtoGenreToGenre)
+                    .fastSaveAll()
 
-                }.type
-                val genres = Gson().fromJson<List<Genre>>(result.toString(), listType)
+            saveSyncStatusToPreferences(PREF_GENRES_SYNC)
+        } catch (e: RequestException) {
+            e.printStackTrace()
+        }
 
-                genres.fastSaveAll()
+        try {
+            IGDBWrapper.themes(params)
+                    .map(::fromProtoThemeToTheme)
+                    .fastSaveAll()
 
-                PreferenceManager.getDefaultSharedPreferences(context).edit()
-                        .putBoolean(PREF_GENRES_SYNC, true).apply()
-            }
-
-            override fun onError(error: Exception) {
-                error.printStackTrace()
-            }
-        })
-
-        wrapper.themes(params, object : OnSuccessCallback {
-            override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Theme>>() {
-
-                }.type
-                val themes = Gson().fromJson<List<Theme>>(result.toString(), listType)
-
-                themes.fastSaveAll()
-
-                PreferenceManager.getDefaultSharedPreferences(context).edit()
-                        .putBoolean(PREF_THEMES_SYNC, true).apply()
-            }
-
-            override fun onError(error: Exception) {
-                error.printStackTrace()
-            }
-        })
+            saveSyncStatusToPreferences(PREF_THEMES_SYNC)
+        } catch (e: RequestException) {
+            e.printStackTrace()
+        }
 
         /*
         The IGDB contains more than 150 platforms. Many are not interesting for this app
         target users. The following list is the ids of the desired platforms manually selected
         from the full list
         */
-        val popularPlatformsIds = "11," +     // Xbox
-                "137," +    //New Nintendo 3DS
-                "6," +      //PC (Microsoft Windows)
-                "37," +     //Nintendo 3DS
-                "48," +     //PlayStation 4
-                "14," +     //Mac
-                "20," +     //Nintendo DS
-                "34," +     //Android
-                "9," +      //PlayStation 3
-                "41," +     //Wii U
-                "130," +    //Nintendo Switch
-                "39," +     //iOS
-                "3," +      //Linux
-                "38," +     //PlayStation Portable
-                "12," +     //Xbox 360
-                "46," +     //PlayStation Vita
-                "49"       //Xbox One
+        val popularPlatformsIds = listOf("11", // Xbox
+                "137",  //New Nintendo 3DS
+                "6",    //PC (Microsoft Windows)
+                "37",   //Nintendo 3DS
+                "48",   //PlayStation 4
+                "14",   //Mac
+                "20",   //Nintendo DS
+                "34",   //Android
+                "9",    //PlayStation 3
+                "41",   //Wii U
+                "130",  //Nintendo Switch
+                "39",   //iOS
+                "3",    //Linux
+                "38",   //PlayStation Portable (PSP)
+                "12",   //Xbox 360
+                "46",   //PlayStation Vita (PS Vita)
+                "49")   //Xbox One
 
         //"38," +     //Xbox Live Arcade
         //"45," +     //PlayStation Network
-        params.addIds(popularPlatformsIds)
-        wrapper.platforms(params, object : OnSuccessCallback {
-            override fun onSuccess(result: JSONArray) {
-                val listType = object : TypeToken<List<Platform>>() {
 
-                }.type
-                val platforms = Gson().fromJson<List<Platform>>(result.toString(), listType)
-
-                platforms.fastSaveAll()
-
-                PreferenceManager.getDefaultSharedPreferences(context).edit()
-                        .putBoolean(PREF_PLATFORMS_SYNC, true).apply()
+        try {
+            // My free plan limit the query by 10 IDs
+            popularPlatformsIds.chunked(QUERY_CHUNK_SIZE).forEach {
+                val platformsParams = APICalypse()
+                        .fields("*")
+                        .limit(50)
+                        .where("id = (${it.joinToString()})")
+                IGDBWrapper.platforms(platformsParams)
+                        .map(::fromProtoPlatformToPlatform)
+                        .fastSaveAll()
             }
 
-            override fun onError(error: Exception) {
-                error.printStackTrace()
-            }
-        })
+            saveSyncStatusToPreferences(PREF_PLATFORMS_SYNC)
+        } catch (e: RequestException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun saveSyncStatusToPreferences(key: String) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putBoolean(key, true).apply()
     }
 
     companion object {
